@@ -40,6 +40,10 @@ menu. There's nothing to install except Python, which is free.
 **Practice first.** Menu option 5 runs the whole process with nine made-up
 songs and a pretend Planning Center. Nothing real changes.
 
+**Share it:** `index.html` is a ready-made landing page. Turn on GitHub
+Pages (Settings > Pages > Deploy from branch `main`, root) to get a link you
+can send to other churches. See [TECHNICAL.md](TECHNICAL.md#landing-page-github-pages).
+
 ## What's in this folder
 
 ```
@@ -50,6 +54,7 @@ ADMIN_GUIDE.md                  Step-by-step instructions in plain language
 RUBRIC.md                       How to choose a score
 TECHNICAL.md                    Commands, file formats, API details
 CLAUDE_PROJECT_SETUP.md         Have regular Claude (no Cowork) do the scoring
+index.html                      Landing page for GitHub Pages
 docs/rubric-one-pager.pdf       Printable rubric for whoever does the scoring
 examples/                       Made-up sample songs for practice
 skill/                          Optional Claude (Cowork) skill

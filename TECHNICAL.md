@@ -120,6 +120,26 @@ pip install reportlab
 python3 docs/build_rubric_pdf.py
 ```
 
+## Landing page (GitHub Pages)
+
+`index.html` at the repo root is a self-contained landing page for sharing
+the project. It has no external fonts, scripts, or images, and `.nojekyll`
+tells GitHub Pages to serve it as-is.
+
+To publish it:
+
+1. In the GitHub repo, go to **Settings > Pages**.
+2. Under "Build and deployment," choose **Deploy from a branch**.
+3. Pick `main` and `/ (root)`, then save.
+
+The page appears at `https://<owner>.github.io/<repo>/`.
+
+On GitHub Pages, the page works out the repo from its own address. It uses
+that to build the Download ZIP, guide, and Issues links. The PDF and
+`.skill` links are relative, so they're served by Pages directly. If you
+host the page anywhere else, set `REPO = "owner/repo"` in the script at
+the bottom of `index.html`.
+
 ## Security notes
 
 - `config.env` holds a live credential in plain text. Keep it out of shared
