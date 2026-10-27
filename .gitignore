@@ -1,0 +1,17 @@
+# Your Planning Center key: never commit
+config.env
+
+# Your church's song data (lyrics are copyrighted): never commit
+*.csv
+*.xlsx
+*.numbers
+!examples/*.csv
+songs_for_claude.json
+logs/
+examples/practice_output/
+
+# OS / Python clutter
+__pycache__/
+*.pyc
+.DS_Store
+Thumbs.db
