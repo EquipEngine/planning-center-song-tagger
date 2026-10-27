@@ -1,123 +1,193 @@
 ---
 name: horizontal-vertical-tagging
-description: Help a church score its Planning Center worship songs on a 1–5 Horizontal↔Vertical scale (1 = sung about God to the church, 5 = sung to God) using the hv_tagger.py tool, then guide the user to send those scores back to Planning Center as tags. Use when someone asks to score, tag, classify, rate, or pre-fill scores for songs on a horizontal/vertical, about-God/to-God, declarative/prayer, or similar axis; mentions scoring_sheet.csv, songs_for_claude.json, hv_tagger.py, or "Start Tagger"; or wants help with new songs that need a score. Not for other kinds of Planning Center tags (seasons, themes, tempo).
+description: Score a church's Planning Center worship songs on a 1–5 Horizontal↔Vertical scale (1 = sung about God to the church, 5 = sung to God) using the hv_tagger.py tool. Claude either suggests every score for review or scores the whole list automatically, flagging only the uncertain songs. Then Claude guides the user to send the scores to Planning Center. Use this when someone asks to score, tag, classify, categorize, or rate songs on a horizontal/vertical, about-God/to-God, or declarative/prayer axis; mentions scoring_sheet.csv, songs_for_claude.json, hv_tagger.py, or "Start Tagger"; or wants scores for newly added songs. Not for other kinds of Planning Center tags (seasons, themes, tempo).
 ---
 
 # Horizontal ↔ Vertical song scoring
 
-This skill helps a church office admin (often not technical) score worship
-songs from 1 to 5 and send the scores to Planning Center. The admin runs a
-menu tool (`hv_tagger.py`, opened by double-clicking **Start Tagger**).
-Claude's job is to suggest scores, explain the reasoning, and guide the
-admin through the menu. Keep explanations in plain language, with no jargon.
+You're helping a church office admin, who is often not technical, give
+worship songs a score from 1 to 5. The admin uses a menu tool,
+`hv_tagger.py`, which they open by double-clicking **Start Tagger**. Your
+job is to score the songs against the rubric, explain your reasoning, and
+guide the admin through the menu. Use plain language and no jargon.
 
 ## The scale
 
-Read `RUBRIC.md` in the tool's folder; it's the authority. In short:
+`RUBRIC.md` in the tool's folder has the final say. In short:
 
 | Score | Meaning |
 |---|---|
 | 1 Horizontal | Sung about God, to the church: declaration, teaching, testimony, calls to worship |
 | 2 Mostly Horizontal | Mostly declaration, with a short line or bridge sung to God |
-| 3 Blend | A real mix, such as verses about God and a chorus to Him, with equal weight |
+| 3 Blend | A real mix: verses about God and a chorus to Him, with equal weight |
 | 4 Mostly Vertical | Mostly sung to God, with some declaration |
 | 5 Vertical | Sung to God throughout: prayer, praise, thanks, surrender |
 
-When a song falls between two numbers, pick the side it leans toward. A song
-that's nearly all prayer is a 5, not a 4.
+When a song falls between two numbers, choose the side it leans toward.
+Keep 2, 3, and 4 for songs that are truly mixed.
 
 ## The non-negotiable rule: never reproduce lyrics
 
-You are not allowed to reproduce song lyrics in anything you output:
-chat messages, tables, files, or notes. This applies even to short phrases
-and quoted fragments.
+Never reproduce song lyrics in anything you output: chat, tables, files,
+notes, or calibration records. This holds even for short phrases or quoted
+fragments.
 
-Describe the song's **pattern** instead:
+Describe the song's **pattern** instead. For example:
 
-- Good: "verses tell about God; chorus speaks directly to Him"
-- Good: "call to the congregation to praise; God described, never addressed"
-- Good: "prayer from start to finish"
-- Bad: any words copied from the song
+- "verses tell about God; chorus speaks directly to Him"
+- "call to the congregation to praise; God described, never addressed"
+- "prayer from start to finish"
 
-If someone asks why your notes don't quote the song, explain that lyrics are
-copyrighted and the pattern description serves the same purpose.
+If someone asks why you don't quote the song, explain that lyrics are
+copyrighted and that the pattern description serves the same purpose.
 
 ## Workflow
 
-### 1. Find the tool's folder
+### 1. Find the tool's folder and the files
 
 Look for a connected folder that contains `hv_tagger.py`. If there isn't
 one, ask the user to connect the folder where they unzipped the tool.
 
-The sandbox usually can't reach `api.planningcenteronline.com`. The user
-runs every step that talks to Planning Center (setup and sending) from the
-**Start Tagger** menu on their own computer. Don't try to call the API
-yourself.
+The user must already have run menu option **2, "Make a scoring sheet."**
+That step creates two files:
 
-### 2. Make sure a scoring sheet exists
+- `scoring_sheet.csv`, with the columns
+  `song_id, title, tags, current_score, score, confidence, notes`
+- `songs_for_claude.json`, which holds each song's `song_id`, `title`,
+  `has_lyrics`, and `lyrics`
 
-The user needs to have run menu option **2, "Make a scoring sheet."** That
-step creates two files:
+If either file is missing, walk the user through `ADMIN_GUIDE.md`
+Steps 1–5 first.
 
-- `scoring_sheet.csv`, with columns `song_id, title, tags, current_score, score, notes`
-- `songs_for_claude.json`, with each song's `song_id`, `title`, `has_lyrics`, and `lyrics`
+The sandbox usually can't reach `api.planningcenteronline.com`. Anything
+that talks to Planning Center (setup and sending scores) happens on the
+user's own computer through the **Start Tagger** menu. Never try to call
+the API yourself.
 
-If either file is missing, walk the user through the setup steps in
-`ADMIN_GUIDE.md` (Steps 1–5) before going further.
+### 2. Load or create the church's calibration notes
 
-### 3. Suggest scores in batches
+Check for a file named `scoring_calibration.md` in the tool's folder.
 
-Read `songs_for_claude.json`. For each song:
+**If it exists:** read it before scoring anything. Its house rules override
+your own reading of the rubric. Tell the user you're applying their saved
+rules.
 
-1. Apply the rubric's four questions: who is being spoken to, how God is
-   referred to, what the song is doing, and whether the verses or chorus
-   carry more weight.
-2. Choose a score from 1 to 5.
-3. Write a one-line note that describes the pattern, following the
-   no-lyrics rule.
+**If it doesn't exist:** offer a quick calibration. This is the single best
+way to make your scores match the church's judgment.
 
-If `has_lyrics` is false, score from your knowledge of the song. If you know
-it, say "scored from knowledge of the song" in the note. If you don't know
-it, leave the score blank and tell the user.
+1. Pick 10 songs from the sheet that cover a range of scores. Include two or
+   three songs that look borderline.
+2. Ask someone at the church, ideally the worship leader, to score those
+   10 *without seeing your scores*. They can reply in chat or fill those
+   rows in the sheet.
+3. Score the same 10 yourself.
+4. Show both sets of scores side by side and discuss each disagreement. Ask
+   what principle they applied, for example: "So descriptions of Jesus sung
+   in 'You' language count as addressed for you?"
+5. Write `scoring_calibration.md` using the format in
+   `examples/sample_scoring_calibration.md`. Include:
+   - the date
+   - the house rules, as short numbered principles
+   - a small table of the rulings: song title, your first score, the
+     church's score, and why
 
-Show suggestions as a table of about 20 songs at a time, with columns
-`#, title, score, note`. After each batch, ask whether the user wants
-changes before you continue. The user's call always wins. Keep a short
-record of any changes they make.
+   Never put lyrics in this file.
 
-### 4. Write the sheet
+If the user declines calibration, continue, but mention that the review in
+step 4 will catch differences.
 
-When every batch is approved, write the scores and notes into the `score`
-and `notes` columns of `scoring_sheet.csv`:
+### 3. Score every song and rate your confidence
 
-- Keep the existing columns and row order.
-- Keep the UTF-8 BOM, so Excel still opens the file cleanly.
-- Don't change `song_id`.
+For each song in `songs_for_claude.json`:
 
-### 5. Hand off to the user
+1. Work through the rubric's four questions:
+   - Who is the song talking to?
+   - How does it refer to God?
+   - What is it doing?
+   - Do the verses or the chorus carry more weight?
+2. Apply any calibration house rules.
+3. Choose a score from 1 to 5.
+4. Rate your confidence:
+   - **high**: The lyrics are available or you know the song well, and the
+     rubric clearly decides the score.
+   - **low**: Any of these is true:
+     - there are no lyrics and you don't know the song well
+     - the song is a medley, or the lyrics don't look like a normal song
+     - you could honestly defend the neighboring score
+     - a calibration rule applies, but it's unclear how
+5. Write a one-line note that describes the pattern. Never quote lyrics.
+   - If the score comes from your own knowledge rather than the lyrics,
+     say so in the note.
+   - If you truly can't score a song, leave `score` blank, mark it
+     **low**, and say why.
 
-Tell the user to double-click **Start Tagger** and do two things:
+### 4. Review with the user: choose a mode
 
-1. Choose **3, "Check my scoring sheet."** It confirms that every score is valid
-   and shows how the scores are spread out.
+Ask which mode the user wants:
+
+**A. Review only the uncertain songs. This is the faster option.**
+
+1. Show the score distribution: the count of songs at each score.
+2. Show a table of every **low** song with these columns:
+   `#, title, your score, note, why you're unsure`.
+3. The user confirms or changes each one.
+4. Also show **5 high-confidence songs chosen at random** as a spot-check,
+   and ask whether those look right. If the user corrects any of them,
+   treat it as a signal:
+   1. Ask what principle they applied.
+   2. Add that principle to the calibration notes.
+   3. Re-check every other song the principle affects, and show those to
+      the user too.
+
+**B. Review everything.** Go through all the songs in batches of about 20,
+using the columns `#, title, score, confidence, note`. Ask for changes after
+each batch.
+
+The user's call always wins.
+
+Whenever a correction reveals a new principle, add it to
+`scoring_calibration.md`, apply it to the songs you haven't reviewed yet,
+and say that you did.
+
+### 5. Write the sheet
+
+Fill in the `score`, `confidence`, and `notes` columns of
+`scoring_sheet.csv`:
+
+- Keep the existing columns and the row order.
+- Keep the UTF-8 BOM so Excel opens the file cleanly.
+- Never change `song_id`.
+
+For the `confidence` column:
+
+- Write `reviewed` for any song the user confirmed or changed.
+- Write `high` for songs that weren't reviewed and that you're confident about.
+- Write `low` only for songs the user chose to leave for later.
+
+The tool's **Check** step lists any rows still marked `low`. The **Send**
+step asks before it sends them.
+
+### 6. Hand off to the user
+
+Tell the user to double-click **Start Tagger** and:
+
+1. Choose **3, "Check my scoring sheet."** This confirms the scores are valid,
+   lists any songs still marked low, and shows how the scores are spread out.
 2. Choose **4, "Send scores to Planning Center."** It sends 3 songs first. The
-   user checks those in Planning Center to confirm each one has the right
-   score and still has its other tags. Then they type `yes` to send the rest.
+   user checks those in Planning Center (right score, other tags still
+   there), then types `yes` to send the rest.
 
-The tool keeps every other tag on each song, skips songs that already have
-the right score, and records everything in `logs/`.
-
-### 6. Afterward (optional)
+### 7. Afterward (optional)
 
 If the user shares the newest file in `logs/`, confirm that every row says
-`updated` or `already set`, and summarize how the scores are spread out.
+`updated` or `already set`, and summarize the distribution.
 
 ## Common situations
 
 | Situation | What to do |
 |---|---|
-| User wants to score only new songs | Have them run option 2 again and answer "yes" to leaving out already-scored songs. |
-| User disagrees with many suggestions | Ask what principle they're applying, adjust your interpretation of the rubric to match, and re-score the rest of the batch that way. |
-| Sheet already has scores in it | Ask before overwriting. Offer to fill in only the blank rows. |
-| User asks Claude to send the scores itself | Explain that the user's computer has to send them, because the connection to Planning Center is set up there. Walk them through option 4 instead. |
+| Scoring only new songs | Have the user run option 2 again and answer "yes" to leaving out songs that already have a score. Read `scoring_calibration.md` so the new songs match earlier decisions. |
+| The user disagrees with many scores | Stop. Ask what principle they're applying, add it to the calibration notes, and re-score the remaining songs with it. |
+| The sheet already has scores | Ask before you overwrite anything. Offer to fill in only the blank rows. |
+| The user asks Claude to send the scores itself | Explain that the user's computer has to send them, because that's where the Planning Center connection is set up. Walk them through option 4. |
 | Errors from Start Tagger | `ADMIN_GUIDE.md` has a troubleshooting table. The tool's messages are written to be read aloud to a non-technical user. |

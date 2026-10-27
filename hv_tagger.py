@@ -61,7 +61,8 @@ PAT_URL = "https://api.planningcenteronline.com/oauth/applications"
 DEFAULT_GROUP = "Horizontal Vertical Scale"
 SCORE_NAMES = {1: "Horizontal", 2: "Mostly Horizontal", 3: "Blend",
                4: "Mostly Vertical", 5: "Vertical"}
-SHEET_FIELDS = ["song_id", "title", "tags", "current_score", "score", "notes"]
+SHEET_FIELDS = ["song_id", "title", "tags", "current_score", "score", "confidence", "notes"]
+LOW_CONFIDENCE = {"low", "?", "unsure", "check"}
 
 PAUSES = True  # turned off by `demo --no-pause`
 
@@ -698,7 +699,7 @@ def cmd_prepare(export=None, out_dir=HERE, scope=None, skip_scored=None, group_n
         for r in selected:
             other_tags = [t for t in song_tags_of(r) if not t.lower().startswith(prefix)]
             w.writerow([row_id(r), (field(r, "Title") or "").strip(), "; ".join(other_tags),
-                        current_score(r), "", ""])
+                        current_score(r), "", "", ""])
 
     songs = []
     for r in selected:
@@ -777,7 +778,9 @@ def cmd_check(sheet=None, quiet=False):
             bad.append(f"row {line_no}: '{title}' is listed twice (also row {seen[sid]})")
             continue
         seen[sid] = line_no
-        good.append({"song_id": sid, "title": title, "score": int(m.group(1))})
+        confidence = str(field(r, "confidence") or "").strip().lower()
+        good.append({"song_id": sid, "title": title, "score": int(m.group(1)),
+                     "flagged": confidence in LOW_CONFIDENCE})
 
     print(f"\nScoring sheet: {path.name}")
     ok(f"{plural(len(good), 'song')} with a valid score")
@@ -794,6 +797,17 @@ def cmd_check(sheet=None, quiet=False):
         if len(bad) > 10:
             print(f"         ...and {len(bad) - 10} more")
 
+    flagged = [g["title"] for g in good if g["flagged"]]
+    if flagged:
+        warn(f"{plural(len(flagged), 'song')} marked 'low' in the confidence column "
+             "(Claude wasn't sure):")
+        for t in flagged[:10]:
+            print(f"         - {t}")
+        if len(flagged) > 10:
+            print(f"         ...and {len(flagged) - 10} more")
+        print("       Have someone look at these. When a score is confirmed, change 'low'")
+        print("       to 'reviewed' (or clear the cell).")
+
     if good:
         counts = Counter(g["score"] for g in good)
         biggest = max(counts.values())
@@ -801,7 +815,7 @@ def cmd_check(sheet=None, quiet=False):
         for n in range(1, 6):
             bar = "#" * round(counts.get(n, 0) / biggest * 30) if biggest else ""
             print(f"   {n} {SCORE_NAMES[n]:<18} {counts.get(n, 0):>4}  {bar}")
-    if not blank and not bad:
+    if not blank and not bad and not flagged:
         print("\nEverything looks good. When you're ready, choose 'Send scores'.")
     return path, good, len(blank) + len(bad)
 
@@ -873,6 +887,13 @@ def cmd_apply(sheet=None, mode=None, pc=None, group_name=None, log_dir=LOG_DIR, 
         if not ask_yes(f"\nSend the {len(good)} songs that do have valid scores and skip the rest?",
                        "yes"):
             print("OK, nothing was sent.")
+            return
+
+    flagged = [g for g in good if g["flagged"]]
+    if flagged and not assume_yes:
+        if not ask_yes(f"\n{plural(len(flagged), 'song')} still marked 'low' confidence. "
+                       "Send anyway?", "no"):
+            print("OK, nothing was sent. Review those songs, then try again.")
             return
 
     cfg = load_config()

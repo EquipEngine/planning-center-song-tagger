@@ -1,9 +1,9 @@
-﻿song_id,title,tags,current_score,score,notes
-1000101,"Rise Up, You Saints",List: A; Type: Chorus,,1,Imperative to the congregation; God described in third person throughout.
-1000102,Cornerstone Creed,List: A; Type: Hymn,,1,Creed-style declaration of what the church believes about Christ.
-1000103,Lantern in the Dark,List: B,,2,Declarative verses and chorus; a short bridge turns to prayer.
-1000104,From the Valley to the Throne,List: B; Type: Chorus,,3,Testimony verses about God; chorus speaks directly to Him.
-1000105,Faithful Through the Years,List: A,,4,One declarative verse; the chorus is sustained address to God.
-1000106,"Hear Us, Lord",List: A; Type: Chorus,,5,"Prayer from start to finish, spoken directly to God."
-1000108,Old Hymn With No Chart,List: B; Type: Hymn,,1,No lyrics in Planning Center; scored from familiarity with the hymn.
-1000109,Christmas Example Carol,Seasonal: Christmas,,1,Narrative of the nativity told in third person.
+﻿song_id,title,tags,current_score,score,confidence,notes
+1000101,"Rise Up, You Saints",List: A; Type: Chorus,,1,high,Imperative to the congregation; God described in third person throughout.
+1000102,Cornerstone Creed,List: A; Type: Hymn,,1,high,Creed-style declaration of what the church believes about Christ.
+1000103,Lantern in the Dark,List: B,,2,reviewed,Declarative verses and chorus; a short bridge turns to prayer.
+1000104,From the Valley to the Throne,List: B; Type: Chorus,,3,high,Testimony verses about God; chorus speaks directly to Him.
+1000105,Faithful Through the Years,List: A,,4,high,One declarative verse; the chorus is sustained address to God.
+1000106,"Hear Us, Lord",List: A; Type: Chorus,,5,high,"Prayer from start to finish, spoken directly to God."
+1000108,Old Hymn With No Chart,List: B; Type: Hymn,,1,reviewed,No lyrics in Planning Center; scored from familiarity with the hymn.
+1000109,Christmas Example Carol,Seasonal: Christmas,,1,high,Narrative of the nativity told in third person.

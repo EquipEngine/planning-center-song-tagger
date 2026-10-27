@@ -38,8 +38,9 @@ python3 hv_tagger.py demo --no-pause             # full practice run against an 
 | File | Created by | Notes |
 |---|---|---|
 | `config.env` | `setup` | `PC_APP_ID`, `PC_SECRET`, `SCALE_GROUP`. Git-ignored. Set to mode 600. |
-| `scoring_sheet.csv` | `prepare` | Columns: `song_id, title, tags, current_score, score, notes`. UTF-8 with BOM so Excel opens it cleanly. Before overwriting, the previous sheet is backed up to `scoring_sheet_backup_<timestamp>.csv`. |
+| `scoring_sheet.csv` | `prepare` | Columns: `song_id, title, tags, current_score, score, confidence, notes`. If `confidence` is `low` (or `?`, `unsure`, or `check`), `check` flags the row and `apply` asks before sending it. Any other value, or a blank, counts as fine. UTF-8 with BOM so Excel opens it cleanly. Before overwriting, the previous sheet is backed up to `scoring_sheet_backup_<timestamp>.csv`. |
 | `songs_for_claude.json` | `prepare` | `{song_id, title, has_lyrics, lyrics}`. Lyrics come from the first arrangement whose chord chart has text left after section headers and chord lines are stripped. **Contains copyrighted lyrics. Git-ignored.** |
+| `scoring_calibration.md` | Claude (skill or Project) | The church's house rules for applying the rubric, written after calibration. Plain text, no lyrics. Git-ignored because it's church-specific. See `examples/sample_scoring_calibration.md`. |
 | `logs/sent_<timestamp>.csv` | `apply` | One row per song: `time, song_id, title, score, result, detail`. `result` is `updated`, `already set`, `not found`, or `stopped`. |
 
 `check` and `apply` accept `.csv` (comma-, semicolon-, or tab-separated;
@@ -95,9 +96,19 @@ the network.
 
 ## Claude skill
 
-`skill/horizontal-vertical-tagging/SKILL.md` teaches Claude (Cowork) to read
-`songs_for_claude.json`, suggest scores in reviewable batches, and write
-them into `scoring_sheet.csv`. Claude doesn't call the Planning Center API
+`skill/horizontal-vertical-tagging/SKILL.md` teaches Claude in Cowork the
+following steps:
+
+1. Load or create `scoring_calibration.md`. Creating it means a 10-song
+   blind comparison with someone at the church.
+2. Score every song in `songs_for_claude.json` with a high or low
+   confidence rating.
+3. Review either the low-confidence songs plus a random spot-check of 5,
+   or every song in batches.
+4. Write `score`, `confidence`, and `notes` into `scoring_sheet.csv`.
+
+`CLAUDE_PROJECT_SETUP.md` gives the same workflow as copy-paste Project
+instructions for churches that use regular Claude without Cowork. Claude doesn't call the Planning Center API
 itself. The admin runs `check` and `apply`. The skill is told never to
 reproduce lyrics in its output. `skill/horizontal-vertical-tagging.skill` is
 the same folder, zipped for one-click install.

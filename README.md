@@ -20,7 +20,7 @@ services that mix the two.
 | I am... | Start here |
 |---|---|
 | **An office admin or volunteer.** I want clear steps and no programming. | **[ADMIN_GUIDE.md](ADMIN_GUIDE.md)** |
-| **Someone who uses Claude (Cowork).** I want Claude to suggest the scores. | [ADMIN_GUIDE.md](ADMIN_GUIDE.md) Step 6, Option B, and the [`skill/`](skill/) folder |
+| **Someone who wants Claude to do the scoring.** | Claude in Cowork: the [`skill/`](skill/) folder. Regular Claude: **[CLAUDE_PROJECT_SETUP.md](CLAUDE_PROJECT_SETUP.md)**. Both are explained in [ADMIN_GUIDE.md](ADMIN_GUIDE.md) Step 6, Option B. |
 | **Technical.** I want the command line and the details. | [TECHNICAL.md](TECHNICAL.md) |
 
 Whichever path you pick, [RUBRIC.md](RUBRIC.md) (or the printable
@@ -31,7 +31,7 @@ each score.
 
 1. **Set up once:** create the score tags in Planning Center and connect the tool with a key.
 2. **Make a scoring sheet:** export your songs from Planning Center, and the tool builds a simple spreadsheet from the export.
-3. **Score:** type a 1–5 next to each song. You can do this yourself, or let Claude suggest scores for you to review.
+3. **Score:** type a 1–5 next to each song yourself, or let Claude score them all. Claude flags the songs it's unsure about for you to review.
 4. **Send:** the tool sends the scores to Planning Center. It tries 3 songs first so you can check them before it does the rest.
 
 You run every step by double-clicking **Start Tagger** and choosing from a
@@ -49,6 +49,7 @@ hv_tagger.py                    The tool itself (the launchers run this)
 ADMIN_GUIDE.md                  Step-by-step instructions in plain language
 RUBRIC.md                       How to choose a score
 TECHNICAL.md                    Commands, file formats, API details
+CLAUDE_PROJECT_SETUP.md         Have regular Claude (no Cowork) do the scoring
 docs/rubric-one-pager.pdf       Printable rubric for whoever does the scoring
 examples/                       Made-up sample songs for practice
 skill/                          Optional Claude (Cowork) skill

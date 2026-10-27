@@ -7,6 +7,7 @@ config.env
 *.numbers
 !examples/*.csv
 songs_for_claude.json
+scoring_calibration.md
 logs/
 examples/practice_output/
 

@@ -7,6 +7,7 @@ share, and publish them freely.
 | File | What it is |
 |---|---|
 | `sample_songs_export.csv` | Nine fictional songs in the same layout as a Planning Center Songs export. It includes a "List" tag group, a song with no chord chart, a seasonal song, and one song that already has a score. |
+| `sample_scoring_calibration.md` | An example of the "house rules" file Claude writes after a calibration session. |
 | `sample_scoring_sheet.csv` | The scoring sheet for those songs, already filled in, covering one song at every score from 1 to 5. The notes show the pattern-style explanations the rubric asks for. |
 
 ## Try it

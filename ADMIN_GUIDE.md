@@ -152,27 +152,44 @@ The tool creates a file named **scoring_sheet.csv** in its folder.
 **Some songs have no lyrics in Planning Center.** These are often older hymns.
 Score them from what you know of the song.
 
-**Option B: Let Claude suggest the scores**
+**Option B: Let Claude do the scoring**
 
-If your church uses Claude in Cowork mode, Claude can pre-fill the scores for
-you to review.
+Claude can score every song using the rubric. It flags only the songs it's
+unsure about, and you review those. There are two ways to set this up.
+Pick whichever matches how your church uses Claude.
 
-1. In Cowork, install the skill in the **skill** folder (`horizontal-vertical-tagging.skill`).
-2. Give Claude access to this tool's folder.
-3. Ask: *"Suggest Horizontal–Vertical scores for my scoring sheet."*
-4. Claude reads the song list and the lyrics file (`songs_for_claude.json`).
-   It shows you its suggestions about 20 songs at a time.
-5. Agree with or change the scores as you go. Claude writes your final
-   answers into scoring_sheet.csv.
+- **You use Claude in Cowork:**
+  1. Install the skill in the **skill** folder
+     (`horizontal-vertical-tagging.skill`).
+  2. Give Claude access to this tool's folder.
+  3. Ask: *"Score the songs in my scoring sheet."*
+- **You use regular Claude (web or desktop app):** follow
+  **[CLAUDE_PROJECT_SETUP.md](CLAUDE_PROJECT_SETUP.md)**. You'll set up a
+  Claude Project once, then upload two files each time you score.
 
-The lyrics file is for this purpose only. It contains copyrighted lyrics, so
-keep it private and don't share it.
+Either way, the steps are the same:
+
+1. **First time only: calibration (about 10 minutes).** Claude picks
+   10 songs. Your worship leader scores them, then Claude compares their
+   scores with its own. Where you disagree, Claude learns your church's
+   "house rules" and uses them from then on.
+2. **Claude scores the whole list.** It rates its confidence in each score
+   as *high* or *low*.
+3. **You review only the low-confidence songs,** plus 5 random songs as a
+   spot-check. If you'd rather, you can ask to review every song.
+4. **Claude fills in the sheet.** It writes the score, confidence, and notes
+   columns. Any song still marked `low` is flagged by the Check step.
+
+The lyrics file (`songs_for_claude.json`) is for this purpose only. It
+contains copyrighted lyrics, so keep it private.
 
 ### Step 7: Check your sheet
 
 1. Double-click **Start Tagger** and choose **3, "Check my scoring sheet."**
 2. The tool lists any songs that are missing a score or have a typo, such as
-   "6" or "4.5".
+   "6" or "4.5". It also lists any songs still marked `low` in the
+   **confidence** column. After someone has looked at a flagged song,
+   change its `low` to `reviewed`.
 3. Fix those in your spreadsheet, save as CSV again, and run the check again.
 
 When the tool says **"Everything looks good,"** you're ready to send.
