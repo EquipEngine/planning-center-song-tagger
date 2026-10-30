@@ -5,7 +5,7 @@ based on how the song speaks about God or to God:
 
 | Score | Meaning |
 |---|---|
-| **1 – Horizontal** | Sung **about** God, to the church: declaring truth, teaching, testimony |
+| **1 – Horizontal** | Sung **about** God, for the edification of the church: declaring truth, teaching, testimony |
 | **2 – Mostly Horizontal** | Mostly declaration, with a moment of prayer |
 | **3 – Blend** | A real mix of the two |
 | **4 – Mostly Vertical** | Mostly prayer or praise, with some declaration |

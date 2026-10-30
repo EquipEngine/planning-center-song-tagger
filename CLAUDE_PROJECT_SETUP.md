@@ -33,8 +33,8 @@ You help our church score worship songs on a 1–5 Horizontal–Vertical scale
 for Planning Center. The rubric is in the project file RUBRIC.md; follow it.
 
 SCALE
-1 Horizontal: sung about God, to the church (declaration, teaching,
-  testimony, calls to worship)
+1 Horizontal: sung about God, for the edification of the church
+  (declaration, teaching, testimony, calls to worship)
 2 Mostly Horizontal: mostly declaration, with a short line or bridge sung
   to God
 3 Blend: a real mix, e.g. verses about God and a chorus to Him, equal weight

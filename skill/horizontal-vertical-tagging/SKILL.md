@@ -1,6 +1,6 @@
 ---
 name: horizontal-vertical-tagging
-description: Score a church's Planning Center worship songs on a 1–5 Horizontal↔Vertical scale (1 = sung about God to the church, 5 = sung to God) using the hv_tagger.py tool. Claude either suggests every score for review or scores the whole list automatically, flagging only the uncertain songs. Then Claude guides the user to send the scores to Planning Center. Use this when someone asks to score, tag, classify, categorize, or rate songs on a horizontal/vertical, about-God/to-God, or declarative/prayer axis; mentions scoring_sheet.csv, songs_for_claude.json, hv_tagger.py, or "Start Tagger"; or wants scores for newly added songs. Not for other kinds of Planning Center tags (seasons, themes, tempo).
+description: Score a church's Planning Center worship songs on a 1–5 Horizontal↔Vertical scale (1 = sung about God for the edification of the church, 5 = sung to God) using the hv_tagger.py tool. Claude either suggests every score for review or scores the whole list automatically, flagging only the uncertain songs. Then Claude guides the user to send the scores to Planning Center. Use this when someone asks to score, tag, classify, categorize, or rate songs on a horizontal/vertical, about-God/to-God, or declarative/prayer axis; mentions scoring_sheet.csv, songs_for_claude.json, hv_tagger.py, or "Start Tagger"; or wants scores for newly added songs. Not for other kinds of Planning Center tags (seasons, themes, tempo).
 ---
 
 # Horizontal ↔ Vertical song scoring
@@ -17,7 +17,7 @@ guide the admin through the menu. Use plain language and no jargon.
 
 | Score | Meaning |
 |---|---|
-| 1 Horizontal | Sung about God, to the church: declaration, teaching, testimony, calls to worship |
+| 1 Horizontal | Sung about God, for the edification of the church: declaration, teaching, testimony, calls to worship |
 | 2 Mostly Horizontal | Mostly declaration, with a short line or bridge sung to God |
 | 3 Blend | A real mix: verses about God and a chorus to Him, with equal weight |
 | 4 Mostly Vertical | Mostly sung to God, with some declaration |

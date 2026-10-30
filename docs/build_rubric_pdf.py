@@ -13,23 +13,23 @@ ss = getSampleStyleSheet()
 H1 = ParagraphStyle("H1", parent=ss["Heading1"], fontName="Helvetica-Bold", fontSize=18,
                     leading=22, alignment=TA_CENTER, spaceAfter=0)
 SUB = ParagraphStyle("SUB", parent=ss["Normal"], fontName="Helvetica-Oblique", fontSize=10,
-                     leading=12, alignment=TA_CENTER, textColor=colors.HexColor("#555"),
+                     leading=12, alignment=TA_CENTER, textColor=colors.HexColor("#555555"),
                      spaceAfter=10)
 H2 = ParagraphStyle("H2", parent=ss["Heading2"], fontName="Helvetica-Bold", fontSize=11.5,
                     leading=13, spaceBefore=11, spaceAfter=4)
 BODY = ParagraphStyle("BODY", parent=ss["Normal"], fontName="Helvetica", fontSize=9, leading=11.5)
-SMALL = ParagraphStyle("SMALL", parent=BODY, fontSize=8.6, leading=11, textColor=colors.HexColor("#333"))
+SMALL = ParagraphStyle("SMALL", parent=BODY, fontSize=8.6, leading=11, textColor=colors.HexColor("#333333"))
 QH = ParagraphStyle("QH", parent=BODY, fontName="Helvetica-Bold", fontSize=9.5, leading=12, spaceAfter=2)
 HDR = ParagraphStyle("HDR", parent=BODY, fontName="Helvetica-Bold", textColor=colors.white)
 NUM = ParagraphStyle("NUM", parent=BODY, fontName="Helvetica-Bold", fontSize=14, leading=16,
                      alignment=TA_CENTER, textColor=colors.white)
 FOOT = ParagraphStyle("FOOT", parent=BODY, fontName="Helvetica-Oblique", fontSize=7.5,
-                      alignment=TA_CENTER, textColor=colors.HexColor("#999"), spaceBefore=6)
+                      alignment=TA_CENTER, textColor=colors.HexColor("#999999"), spaceBefore=6)
 COLORS = ["#c0504d", "#e8a37c", "#bdb59e", "#7ba6c6", "#3d6b88"]
 
 rows = [
-    ("1", "Horizontal", "Sung <b>about</b> God, to the gathered church. Declares truth, teaches, or tells a "
-     "testimony. Describes who God is and what He has done, and never speaks to Him for long."),
+    ("1", "Horizontal", "Sung <b>about</b> God, for the edification of the church. Declares truth, teaches, "
+     "or tells a testimony. Describes who God is and what He has done, and never speaks to Him for long."),
     ("2", "Mostly Horizontal", "Mostly declaration. A bridge, a tag, or a line or two speaks directly "
      "to God, but most of the song is about Him."),
     ("3", "Blend", "A real mix. For example, the verses tell about God and the chorus speaks to Him, "
@@ -47,9 +47,9 @@ data = [[Paragraph("<para alignment='center'>Score</para>", HDR), Paragraph("Nam
 for n, name, desc in rows:
     data.append([Paragraph(n, NUM), Paragraph(f"<b>{name}</b>", BODY), Paragraph(desc, BODY)])
 t = Table(data, colWidths=[0.6 * inch, 1.35 * inch, 5.35 * inch])
-style = [("BACKGROUND", (0, 0), (-1, 0), colors.HexColor("#333")),
+style = [("BACKGROUND", (0, 0), (-1, 0), colors.HexColor("#333333")),
          ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
-         ("GRID", (0, 0), (-1, -1), 0.4, colors.HexColor("#ddd")),
+         ("GRID", (0, 0), (-1, -1), 0.4, colors.HexColor("#dddddd")),
          ("TOPPADDING", (0, 0), (-1, -1), 5), ("BOTTOMPADDING", (0, 0), (-1, -1), 5)]
 style += [("BACKGROUND", (0, i), (0, i), colors.HexColor(c)) for i, c in enumerate(COLORS, 1)]
 t.setStyle(TableStyle(style))

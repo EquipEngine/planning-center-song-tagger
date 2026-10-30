@@ -7,7 +7,7 @@ is at [docs/rubric-one-pager.pdf](docs/rubric-one-pager.pdf).
 
 | Score | Name | What it means |
 |---|---|---|
-| **1** | Horizontal | The song is sung **about** God, to the gathered church. It declares truth, teaches, or tells a testimony. It describes who God is and what He has done, and never speaks to Him for long. |
+| **1** | Horizontal | The song is sung **about** God, for the edification of the church. It declares truth, teaches, or tells a testimony. It describes who God is and what He has done, and never speaks to Him for long. |
 | **2** | Mostly Horizontal | Mostly declaration. A bridge, a repeated tag, or a line or two speaks directly to God, but most of the song is about Him. |
 | **3** | Blend | A real mix. For example, the verses tell about God and the chorus speaks to Him, and both carry equal weight. |
 | **4** | Mostly Vertical | Mostly sung to God, with some declaration. The verses often set up a chorus that's sung directly to Him. |
