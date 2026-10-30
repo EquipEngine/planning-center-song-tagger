@@ -58,7 +58,7 @@ EXAMPLES = HERE / "examples"
 DEMO_OUT = EXAMPLES / "practice_output"
 
 API_BASE = "https://api.planningcenteronline.com/services/v2"
-PAT_URL = "https://api.planningcenteronline.com/oauth/applications"
+PAT_URL = "https://api.planningcenteronline.com/personal_access_tokens"
 DEFAULT_GROUP = "Horizontal Vertical Scale"
 SCORE_NAMES = {1: "Horizontal", 2: "Mostly Horizontal", 3: "Blend",
                4: "Mostly Vertical", 5: "Vertical"}
@@ -231,7 +231,7 @@ class PlanningCenter:
                 if e.code == 401:
                     raise UserError(
                         "Planning Center did not accept your key. Choose 'Set up' and "
-                        "paste the Application ID and Secret again.")
+                        "paste the Client ID and Secret again.")
                 if e.code == 403:
                     raise UserError(
                         "Your Planning Center login doesn't have permission to do this. "
@@ -536,23 +536,23 @@ def best_lyrics(row):
 def prompt_for_key(cfg):
     print()
     print("To connect, you need a Planning Center 'Personal Access Token'.")
-    print("It's two codes: an Application ID and a Secret.")
+    print("It's two codes: a Client ID and a Secret.")
     print()
     print(f"  1. Open this page in your web browser and sign in:\n     {PAT_URL}")
     print("  2. Find 'Personal Access Tokens' and create a new one.")
     print("     Name it something like 'Song tagging'.")
-    print("  3. Copy the Application ID, paste it below, and press Enter.")
+    print("  3. Copy the Client ID, paste it below, and press Enter.")
     print("  4. Copy the Secret, paste it below, and press Enter.")
     print("     (The Secret is only shown once, so keep that page open until you finish.)")
     print()
-    app_id = ask("Application ID")
+    app_id = ask("Client ID")
     print("Secret: for privacy, nothing will appear on screen as you paste it. That's normal.")
     try:
         secret = getpass.getpass("Secret: ").strip()
     except (EOFError, KeyboardInterrupt):
         secret = ""
     if not app_id or not secret:
-        raise UserError("Both the Application ID and the Secret are needed. Nothing was saved.")
+        raise UserError("Both the Client ID and the Secret are needed. Nothing was saved.")
     cfg.update(PC_APP_ID=app_id, PC_SECRET=secret)
     save_config(cfg)
     ok("Saved to config.env on this computer.")
@@ -563,7 +563,7 @@ def cmd_setup():
     heading("Step 1: Connect to Planning Center")
     cfg = load_config()
     if cfg.get("PC_APP_ID") and cfg.get("PC_SECRET"):
-        print(f"You're already connected (Application ID ending in ...{cfg['PC_APP_ID'][-4:]}).")
+        print(f"You're already connected (Client ID ending in ...{cfg['PC_APP_ID'][-4:]}).")
         if ask_yes("Do you want to enter a different key?", "no"):
             cfg = prompt_for_key(cfg)
     else:

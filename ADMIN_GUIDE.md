@@ -68,12 +68,12 @@ The scores are saved as tags in a new tag group. You create this group once,
 by hand, in Planning Center.
 
 1. Sign in to Planning Center and open **Services**.
-2. Go to **Songs**, then open the song **Tags** settings. This is usually in the
-   settings (gear) area of the Songs page.
-3. Create a new tag group with this exact name:
-   **Horizontal Vertical Scale**
+2. Go to **Songs**, click **Actions**, then **Edit Tags**. Stay on the **Song** tab.
+3. Click **Add Tag Group** and name it **Horizontal Vertical Scale**. Leave
+   **Allow multiple selections** off, since each song gets one score.
 4. Turn on **Required** if you want Planning Center to require a score on every
    song. This is optional. You can leave it off until your scoring is finished.
+   Then click **Save**.
 5. Add these five tags to the group, typed exactly like this:
    - `1 - Horizontal`
    - `2 - Mostly Horizontal`
@@ -87,14 +87,14 @@ by hand, in Planning Center.
 ### Step 4: Connect the tool to Planning Center
 
 The tool needs a key, called a **Personal Access Token**, so it can update
-your songs. The key is two codes: an **Application ID** and a **Secret**.
+your songs. The key is two codes: a **Client ID** and a **Secret**.
 
 1. Double-click **Start Tagger** and choose **1, "Set up."**
 2. The window shows a web address. Open it in your browser:
-   `https://api.planningcenteronline.com/oauth/applications`
+   `https://api.planningcenteronline.com/personal_access_tokens`
 3. Sign in, find **Personal Access Tokens**, and create a new one.
    Name it something like "Song tagging."
-4. Copy the **Application ID**, paste it into the tagger window, and press Enter.
+4. Copy the **Client ID**, paste it into the tagger window, and press Enter.
    - Mac: press Command-V to paste.
    - Windows: right-click inside the window to paste.
 5. Copy the **Secret** and paste it the same way. **Nothing will appear on screen

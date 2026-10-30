@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- This page may only talk to itself and to Planning Center. Even a bug can't send your key anywhere else. -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data:; media-src 'self'; connect-src 'self' https://api.planningcenteronline.com; form-action 'none'; base-uri 'none'">
+<meta name="referrer" content="no-referrer">
+<title>H↔V Song Tagger</title>
+<meta name="description" content="Score your Planning Center worship songs from 1 (sung about God) to 5 (sung to God).">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect x='5' y='55' width='16' height='40' rx='3' fill='%23c0504d'/%3E%3Crect x='23' y='70' width='16' height='25' rx='3' fill='%23e8a37c'/%3E%3Crect x='41' y='65' width='16' height='30' rx='3' fill='%23bdb59e'/%3E%3Crect x='59' y='45' width='16' height='50' rx='3' fill='%237ba6c6'/%3E%3Crect x='77' y='15' width='16' height='80' rx='3' fill='%233d6b88'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap top-row">
+    <a class="brand" href="../" title="About this tool">
+      <span class="bars" aria-hidden="true"><i class="c1 h14"></i><i class="c2 h9"></i><i class="c3 h11"></i><i class="c4 h17"></i><i class="c5 h22"></i></span>
+      H↔V Song Tagger
+    </a>
+    <span id="practice-badge" class="badge" hidden>Practice mode: nothing is sent to Planning Center</span>
+    <button class="link top-link" type="button" id="forget-key" hidden>Forget saved key</button>
+    <a class="help-link" href="../" target="_blank" rel="noopener noreferrer">Help &amp; rubric</a>
+  </div>
+  <ol class="wrap stepper" id="stepper">
+    <li data-step="1"><span>1</span> Connect</li>
+    <li data-step="2"><span>2</span> Choose songs</li>
+    <li data-step="3"><span>3</span> Score</li>
+    <li data-step="4"><span>4</span> Send</li>
+  </ol>
+</header>
+
+<main class="wrap">
+
+  <div id="error" class="alert error" role="alert" hidden></div>
+
+  <!-- ============================== Step 1 ============================== -->
+  <section id="step1" class="step">
+    <div id="connect-view">
+      <h1>Connect to Planning Center</h1>
+      <p class="lead">The tagger needs a <b>Personal Access Token</b> so it can read your songs and update their score tags. A token is two codes: a Client ID and a Secret.</p>
+
+      <div class="cols">
+        <div class="panel">
+          <div id="web-note" class="status warn" hidden>
+            <b>Connecting needs the HV Song Tagger app.</b> Planning Center doesn't let web pages use a key, so in a browser this page can only run the practice. Try it with the sample songs, then use the app for your real songs. <a href="../">About the app</a>
+          </div>
+          <ol class="howto" id="connect-howto">
+            <li>Open the <a href="https://api.planningcenteronline.com/personal_access_tokens" target="_blank" rel="noopener noreferrer">Planning Center developer page</a> and sign in.</li>
+            <li>Under <b>Personal Access Tokens</b>, create a new one. Name it something like “Song tagging.”</li>
+            <li>Copy the two codes into the boxes below. The Secret is shown only once, so keep that page open until you've connected.</li>
+          </ol>
+          <form id="connect-form" autocomplete="off">
+            <label for="client-id">Client ID</label>
+            <input id="client-id" type="text" spellcheck="false" autocapitalize="off" required>
+            <label for="secret">Secret</label>
+            <input id="secret" type="password" spellcheck="false" autocapitalize="off" autocomplete="new-password" required>
+            <label class="check-line" id="remember-line" hidden><input type="checkbox" id="remember-key" checked> <span>Remember this key on this computer, so you don't have to paste it next time. It's kept in <span id="key-store">your Mac's Keychain</span>.</span></label>
+            <div class="btn-row">
+              <button class="btn primary" type="submit" id="connect-btn">Connect</button>
+            </div>
+          </form>
+          <div id="connect-status" class="status" hidden></div>
+          <div id="group-picker" hidden>
+            <h3>Which tag group holds your 1–5 scores?</h3>
+            <div id="group-list" class="choice-grid"></div>
+            <button class="link" type="button" id="none-of-these">None of these. Show me how to set one up</button>
+          </div>
+        </div>
+
+        <aside class="side">
+          <div class="note safe">
+            <h3>Your key stays private</h3>
+            <ul>
+              <li id="key-where">It's sent only to Planning Center, straight from this browser. This page is blocked from talking to anything else.</li>
+              <li id="key-forget">It's never saved. Closing this tab forgets it.</li>
+              <li>The key can do anything <i>you</i> can do in Planning Center, so delete it on the developer page when you're finished scoring.</li>
+            </ul>
+          </div>
+          <div class="note">
+            <h3>Just trying it out?</h3>
+            <p>Practice with nine made-up songs and a pretend Planning Center. Nothing is sent anywhere.</p>
+            <button class="btn ghost" type="button" id="practice-btn">Practice with sample songs</button>
+          </div>
+        </aside>
+      </div>
+    </div>
+
+    <div id="setup-view" hidden>
+      <h1>Set up your score tags</h1>
+      <p class="lead">You're connected, but Planning Center doesn't have a 1–5 score tag group yet. You only do this once, and it takes about two minutes.</p>
+      <div id="setup-incomplete" class="status warn" hidden></div>
+
+      <div class="setup-grid">
+        <div class="panel">
+          <h3><span class="num">1</span> Open the song tag settings</h3>
+          <ol class="howto">
+            <li>In Planning Center, open <b>Services</b>, then <b>Songs</b>.</li>
+            <li>Click <b>Actions</b>, then <b>Edit Tags</b>.</li>
+            <li>Stay on the <b>Song</b> tab.</li>
+          </ol>
+          <figure class="media" id="fig-find" hidden>
+            <img id="img-find" src="media/find-tags.gif" alt="Opening Songs, then Actions, then Edit Tags in Planning Center Services">
+          </figure>
+        </div>
+        <div class="panel">
+          <h3><span class="num">2</span> Add the score group and its tags</h3>
+          <ol class="howto">
+            <li>Click <b>Add Tag Group</b>.</li>
+            <li>Name it <b>Horizontal Vertical Scale</b>. Leave <b>Allow multiple selections</b> off, then click <b>Save</b>.</li>
+            <li>In the new group, add these five tags. Each one must <b>start with its number</b>:
+              <ul class="tag-names">
+                <li><code>1 - Horizontal</code></li>
+                <li><code>2 - Mostly Horizontal</code></li>
+                <li><code>3 - Blend</code></li>
+                <li><code>4 - Mostly Vertical</code></li>
+                <li><code>5 - Vertical</code></li>
+              </ul>
+            </li>
+          </ol>
+          <figure class="media" id="fig-create" hidden>
+            <video id="video-create" src="media/create-tag-group.mp4" controls muted playsinline preload="metadata"></video>
+          </figure>
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="btn primary" type="button" id="check-again">I've added them. Check again</button>
+      </div>
+      <div id="check-status" class="status" hidden></div>
+    </div>
+  </section>
+
+  <!-- ============================== Step 2 ============================== -->
+  <section id="step2" class="step" hidden>
+    <h1>Choose the songs to score</h1>
+    <p class="lead">Pick which songs to score, then how you'd like to score them.</p>
+
+    <div class="load-row">
+      <div id="load-status" class="status" hidden></div>
+      <button class="btn ghost small" type="button" id="refresh-songs" hidden>Refresh song list</button>
+    </div>
+    <div class="progress loading" id="load-progress" hidden><i id="load-bar"></i></div>
+
+    <div id="scope" hidden>
+      <div class="panel">
+        <h3>Which songs?</h3>
+        <div id="tag-options" class="choice-list"></div>
+        <label class="check-line" id="skip-line"><input type="checkbox" id="skip-scored" checked> <span id="skip-label">Leave out songs that already have a score</span></label>
+        <p class="muted" id="scope-count"></p>
+      </div>
+
+      <h3 class="section-q">How do you want to score them?</h3>
+      <div class="mode-grid">
+        <button type="button" class="mode-card" id="mode-self">
+          <b>Score them myself</b>
+          <span>Pick a number from 1 to 5 for each song, with the rubric beside you. Good for teams who want to talk through every song.</span>
+        </button>
+        <button type="button" class="mode-card" id="mode-claude">
+          <b>Have Claude suggest scores</b>
+          <span>Claude reads the lyrics and suggests a score for every song, marking the ones it's unsure about. You review them before anything is sent.</span>
+        </button>
+      </div>
+    </div>
+
+    <details class="panel alt-source" id="export-alt">
+      <summary>Use a Songs export file instead</summary>
+      <p class="muted">If you'd rather work from a file, export your song list from Planning Center Services as a CSV and choose it here. The file stays on this computer.</p>
+      <label class="drop" id="drop">
+        <input type="file" id="export-file" accept=".csv,text/csv">
+        <b>Choose your Songs export (.csv)</b>
+        <span>or drag it onto this box</span>
+      </label>
+    </details>
+  </section>
+
+  <!-- ============================== Step 3 ============================== -->
+  <section id="step3" class="step" hidden>
+    <div class="step-head">
+      <div>
+        <h1>Score each song</h1>
+        <p class="lead">Pick the number for how each song speaks: <b>1</b> about God, for the edification of the church, up to <b>5</b> sung to God. Your choices are saved on this computer as you go.</p>
+      </div>
+      <div class="progress-box">
+        <div class="progress"><i id="score-bar"></i></div>
+        <span id="score-progress"></span>
+      </div>
+    </div>
+
+    <details class="panel claude" id="claude-panel">
+      <summary>Let Claude suggest scores</summary>
+      <ol class="claude-steps">
+        <li>
+          <b>Save the files for Claude.</b> One has the lyrics for Claude to read (keep it private); the other is the sheet Claude fills in.
+          <div class="btn-row"><button class="btn ghost" type="button" id="save-claude">Save the 2 files</button></div>
+          <div id="claude-files-status" class="status" hidden></div>
+        </li>
+        <li>
+          <b>Give both files to Claude.</b> Follow the <a href="../CLAUDE_PROJECT_SETUP.md" target="_blank" rel="noopener noreferrer">Claude Project setup guide</a>; it has the instructions to paste. <a href="https://claude.ai" target="_blank" rel="noopener noreferrer">Open Claude</a>
+        </li>
+        <li>
+          <b>Bring Claude's sheet back here.</b> Songs Claude was unsure about are marked so you can check them.
+          <div class="btn-row"><label class="btn ghost file-btn">Import Claude's sheet<input type="file" id="import-file" accept=".csv,text/csv"></label></div>
+          <div id="import-status" class="status" hidden></div>
+        </li>
+      </ol>
+    </details>
+
+    <details class="panel rubric">
+      <summary>Quick rubric</summary>
+      <div class="rubric-grid">
+        <div><span class="chip c1">1</span><b>Horizontal</b><span>Declaration, teaching, testimony, calls to worship</span></div>
+        <div><span class="chip c2">2</span><b>Mostly Horizontal</b><span>Mostly declaration, with a moment of prayer</span></div>
+        <div><span class="chip c3">3</span><b>Blend</b><span>Verses about God, a chorus to Him, equal weight</span></div>
+        <div><span class="chip c4">4</span><b>Mostly Vertical</b><span>Mostly prayer or praise, with some declaration</span></div>
+        <div><span class="chip c5">5</span><b>Vertical</b><span>Prayer, praise, and surrender addressed to God</span></div>
+      </div>
+      <p class="muted">Stuck between two numbers? Pick the side the song leans toward. <a href="../RUBRIC.md" target="_blank" rel="noopener noreferrer">Full rubric</a> · <a href="../docs/rubric-one-pager.pdf" target="_blank" rel="noopener noreferrer">Printable one-pager</a></p>
+    </details>
+
+    <div class="toolbar">
+      <input type="search" id="search" placeholder="Find a song">
+      <div class="seg" id="view-filter" role="group" aria-label="Show">
+        <button type="button" data-view="all" class="on">All</button>
+        <button type="button" data-view="todo">Not scored</button>
+        <button type="button" data-view="flagged">Unsure</button>
+      </div>
+    </div>
+
+    <ul id="song-list" class="songs"></ul>
+    <p id="empty-list" class="muted center" hidden>No songs match.</p>
+
+    <div class="sticky-actions">
+      <button class="btn ghost" type="button" id="back-to-2">← Change songs</button>
+      <button class="btn primary" type="button" id="to-send">Review and send →</button>
+    </div>
+  </section>
+
+  <!-- ============================== Step 4 ============================== -->
+  <section id="step4" class="step" hidden>
+    <h1>Send scores to Planning Center</h1>
+    <p class="lead">This changes only the score tag on each song. Every other tag is kept.</p>
+
+    <div class="cols">
+      <div class="panel">
+        <h3>Ready to send</h3>
+        <div id="dist" class="dist"></div>
+        <div id="send-warnings"></div>
+        <label class="check-line" id="flagged-line" hidden><input type="checkbox" id="include-flagged"> <span id="flagged-label"></span></label>
+
+        <div id="phase-test">
+          <p>First, send just a few songs so you can check them in Planning Center.</p>
+          <div class="btn-row">
+            <button class="btn primary" type="button" id="send-test">Send 3 test songs</button>
+            <button class="btn ghost" type="button" id="back-to-3">← Back to scoring</button>
+          </div>
+        </div>
+
+        <div id="phase-check" hidden>
+          <h3>Check these songs</h3>
+          <p id="check-intro"></p>
+          <ul id="check-list" class="check-list"></ul>
+          <div class="btn-row">
+            <button class="btn primary" type="button" id="send-rest">They look right. Send the rest</button>
+            <button class="btn ghost" type="button" id="stop-here">Something's wrong. Stop here</button>
+          </div>
+        </div>
+
+        <div id="phase-done" hidden>
+          <h3 id="done-title">All done!</h3>
+          <p id="done-text"></p>
+          <div class="btn-row">
+            <button class="btn ghost" type="button" id="dl-log">Save a record of what was sent</button>
+            <button class="btn ghost" type="button" id="score-more">Score more songs</button>
+          </div>
+        </div>
+      </div>
+
+      <aside class="side">
+        <div class="panel">
+          <h3>Progress</h3>
+          <div class="progress"><i id="send-bar"></i></div>
+          <p id="send-counts" class="muted">Nothing sent yet.</p>
+          <ul id="send-log" class="log"></ul>
+        </div>
+      </aside>
+    </div>
+
+    <div id="whats-next" hidden>
+      <h2>What's next: using your scores</h2>
+      <p class="lead">Your scores are ordinary song tags, so they work everywhere Planning Center uses tags.</p>
+      <div class="next-item panel">
+        <div>
+          <h3>Plan a service with them</h3>
+          <ol class="howto">
+            <li>In a plan, add a song. The <b>Select Song</b> panel opens.</li>
+            <li>Click <b>Filter</b>, then the <b>Tags</b> tab.</li>
+            <li>Under <b class="group-name">your score group</b>, tick the scores you want. For an opening of declaration, try <b>1</b> and <b>2</b>; for a time of response, <b>4</b> and <b>5</b>.</li>
+            <li>The list narrows to matching songs. Pick one.</li>
+          </ol>
+        </div>
+        <figure class="media" hidden><video src="media/plan-with-scores.mp4" controls muted playsinline preload="metadata"></video></figure>
+      </div>
+      <div class="next-item panel">
+        <div>
+          <h3>Filter your song library</h3>
+          <ol class="howto">
+            <li>Open <b>Songs</b> and click <b>Filter</b>.</li>
+            <li>Choose the <b>Tags</b> tab, then pick a score under <b class="group-name">your score group</b>.</li>
+          </ol>
+          <p class="muted">Handy for seeing how your most-used songs lean, or finding a vertical song for a season of prayer.</p>
+        </div>
+        <figure class="media" hidden><img src="media/filter-songs.webp" alt="The Songs filter in Planning Center, on the Tags tab, with the score group's menu"></figure>
+      </div>
+      <div class="next-item panel">
+        <div>
+          <h3>See or change a song's score</h3>
+          <p>Open any song. Its score is listed under <b>Tags</b>, in <b class="group-name">your score group</b>. You can change it right there, and the tagger will see the new score next time.</p>
+        </div>
+        <figure class="media" hidden><img src="media/song-tags.webp" alt="A song page in Planning Center showing its score under Tags"></figure>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="wrap foot">
+  <span id="foot-text">Open source under the MIT License. This page runs entirely in your browser: no account, no server, no tracking.</span>
+  <a href="../" target="_blank" rel="noopener noreferrer">About this tool</a>
+</footer>
+
+<script src="core.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

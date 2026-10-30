@@ -1,0 +1,7 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "default",
+  "description": "The main window gets basic window features only. The app's own three commands are in src/main.rs.",
+  "windows": ["main"],
+  "permissions": ["core:default"]
+}

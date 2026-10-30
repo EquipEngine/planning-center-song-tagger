@@ -57,7 +57,7 @@ refuses to send anything unless all five digits are present.
 ## Planning Center API details
 
 Base URL: `https://api.planningcenteronline.com/services/v2`. Authentication
-is HTTP Basic with the Personal Access Token's Application ID and Secret.
+is HTTP Basic with the Personal Access Token's Client ID and Secret.
 
 | Purpose | Call |
 |---|---|
@@ -144,7 +144,7 @@ the bottom of `index.html`.
 
 - `config.env` holds a live credential in plain text. Keep it out of shared
   drives and email. Revoke the token at
-  `https://api.planningcenteronline.com/oauth/applications` when you're done.
+  `https://api.planningcenteronline.com/personal_access_tokens` when you're done.
 - The PAT has the same permissions as the person who created it. Create it
   from an account that can edit songs, and preferably not an org-wide
   superuser.

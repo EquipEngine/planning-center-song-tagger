@@ -1,0 +1,14 @@
+{
+  "name": "hv-tagger-desktop",
+  "private": true,
+  "description": "Desktop app for the Horizontal-Vertical Song Tagger. The interface is ../app; Planning Center requests go through src-tauri.",
+  "license": "MIT",
+  "scripts": {
+    "frontend": "node build-frontend.mjs",
+    "dev": "tauri dev",
+    "build": "tauri build"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "^2"
+  }
+}
