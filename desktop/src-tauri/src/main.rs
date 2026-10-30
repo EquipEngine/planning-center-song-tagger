@@ -24,6 +24,8 @@ const BROWSER_HOSTS: &[&str] = &[
     "github.com",
     "3cordguy.github.io",
     "claude.ai",
+    "chatgpt.com",
+    "gemini.google.com",
 ];
 const KEYCHAIN_SERVICE: &str = "HV Song Tagger";
 const KEYCHAIN_ACCOUNT: &str = "Planning Center key";

@@ -24,10 +24,10 @@
     <a class="help-link" href="../" target="_blank" rel="noopener noreferrer">Help &amp; rubric</a>
   </div>
   <ol class="wrap stepper" id="stepper">
-    <li data-step="1"><span>1</span> Connect</li>
-    <li data-step="2"><span>2</span> Choose songs</li>
-    <li data-step="3"><span>3</span> Tag</li>
-    <li data-step="4"><span>4</span> Send</li>
+    <li data-step="1"><button type="button" data-go="1"><span>1</span> Connect</button></li>
+    <li data-step="2"><button type="button" data-go="2"><span>2</span> Choose songs</button></li>
+    <li data-step="3"><button type="button" data-go="3"><span>3</span> Tag</button></li>
+    <li data-step="4"><button type="button" data-go="4"><span>4</span> Send</button></li>
   </ol>
 </header>
 
@@ -160,9 +160,9 @@
           <em>Start tagging →</em>
         </button>
         <button type="button" class="mode-card" id="mode-claude">
-          <b>Have Claude suggest directions</b>
-          <span>Claude reads the lyrics and suggests a direction for every song, marking the ones it's unsure about. You review them before anything is sent.</span>
-          <em>Get Claude's help →</em>
+          <b>Have AI suggest directions</b>
+          <span>An assistant like Claude, ChatGPT, or Gemini reads the lyrics and suggests a direction for every song, marking the ones it's unsure about. You review them before anything is sent.</span>
+          <em>Get AI help →</em>
         </button>
       </div>
       </div>
@@ -198,19 +198,36 @@
     </div>
 
     <details class="panel claude" id="claude-panel">
-      <summary>Let Claude suggest directions</summary>
+      <summary>Let AI suggest directions</summary>
       <ol class="claude-steps">
         <li>
-          <b>Save the files for Claude.</b> One has the lyrics for Claude to read (keep it private); the other is the sheet Claude fills in.
+          <b>Save the 2 files.</b> One has the lyrics for the AI to read (keep it private); the other is the sheet it fills in.
           <div class="btn-row"><button class="btn ghost" type="button" id="save-claude">Save the 2 files</button></div>
           <div id="claude-files-status" class="status" hidden></div>
         </li>
         <li>
-          <b>Give both files to Claude.</b> Follow the <a href="../CLAUDE_PROJECT_SETUP.md" target="_blank" rel="noopener noreferrer">Claude Project setup guide</a>; it has the instructions to paste. <a href="https://claude.ai" target="_blank" rel="noopener noreferrer">Open Claude</a>
+          <b>Give them to an AI assistant.</b> Pick the one you use:
+          <div class="seg ai-tabs" id="ai-tabs" role="tablist" aria-label="AI assistant">
+            <button type="button" role="tab" data-ai="claude">Claude</button>
+            <button type="button" role="tab" data-ai="chatgpt">ChatGPT</button>
+            <button type="button" role="tab" data-ai="gemini">Gemini</button>
+            <button type="button" role="tab" data-ai="other">Other</button>
+          </div>
+          <ol class="ai-howto" id="ai-howto"></ol>
+          <div class="prompt-box">
+            <div class="prompt-head"><b>The prompt</b><button class="btn primary small" type="button" id="copy-prompt">Copy prompt</button></div>
+            <textarea id="ai-prompt" readonly rows="9" spellcheck="false" aria-label="Prompt to paste into the AI assistant"></textarea>
+          </div>
+          <p class="muted">The lyrics file goes to the assistant you choose. Song lyrics are copyrighted, so use your own account and don't share the chat.</p>
         </li>
         <li>
-          <b>Bring Claude's sheet back here.</b> Songs Claude was unsure about are marked so you can check them.
-          <div class="btn-row"><label class="btn ghost file-btn">Import Claude's sheet<input type="file" id="import-file" accept=".csv,text/csv"></label></div>
+          <b>Bring the finished sheet back here.</b> Songs the AI was unsure about are marked so you can check them.
+          <div class="btn-row"><label class="btn ghost file-btn">Import the sheet file<input type="file" id="import-file" accept=".csv,text/csv"></label></div>
+          <details class="paste-alt">
+            <summary>Got text instead of a file? Paste it here</summary>
+            <textarea id="paste-sheet" rows="6" spellcheck="false" placeholder="song_id,title,tags,current_score,score,confidence,notes&#10;1000101,Example Song,List: A,,1,high,Calls the congregation to praise"></textarea>
+            <div class="btn-row"><button class="btn ghost small" type="button" id="import-paste">Import pasted text</button></div>
+          </details>
           <div id="import-status" class="status" hidden></div>
         </li>
       </ol>

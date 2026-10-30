@@ -116,12 +116,16 @@
   }
 
   /** In the app, help links open in the default browser and the wording says "app". */
-  function setUpDesktop() {
-    document.querySelectorAll("a[href]").forEach(function (a) {
+  function setUpDesktopLinks(root) {
+    root.querySelectorAll("a[href]").forEach(function (a) {
       var href = a.getAttribute("href");
       if (/\.md$/.test(href)) a.href = REPO + "blob/main/" + href.replace(/^\.\.\//, "");
       else if (href.indexOf("../") === 0) a.href = SITE + href.slice(3);
     });
+  }
+
+  function setUpDesktop() {
+    setUpDesktopLinks(document);
     document.addEventListener("click", function (e) {
       var a = e.target.closest("a[href^='https://']");
       if (!a) return;
@@ -138,11 +142,11 @@
   }
 
   /** On GitHub Pages, point the doc links at the repo (Pages serves .md as plain text). */
-  function linkDocs() {
+  function linkDocs(root) {
     var host = location.hostname;
     if (!/\.github\.io$/i.test(host)) return;
     var repo = host.split(".")[0] + "/" + (location.pathname.split("/").filter(Boolean)[0] || host);
-    document.querySelectorAll('a[href$=".md"]').forEach(function (a) {
+    (root || document).querySelectorAll('a[href$=".md"]').forEach(function (a) {
       a.href = "https://github.com/" + repo + "/blob/main/" + a.getAttribute("href").replace(/^\.\.\//, "");
     });
   }
@@ -168,13 +172,34 @@
   // ==================================================================
 
   function show(step) {
+    state.step = step;
     [1, 2, 3, 4].forEach(function (n) { $("step" + n).hidden = n !== step; });
+    updateStepper();
+    window.scrollTo(0, 0);
+  }
+
+  /** A step can be opened once there's something to show on it. Nothing moves while sending. */
+  function canGo(n) {
+    if (state.sending) return n === state.step;
+    if (n === 1) return true;
+    if (n === 2) return !!state.pc || state.songs.length > 0;
+    if (n === 3) return state.selected.length > 0;
+    return scoredSongs().length > 0;
+  }
+
+  function updateStepper() {
     document.querySelectorAll("#stepper li").forEach(function (li) {
       var n = +li.getAttribute("data-step");
-      li.className = n === step ? "current" : n < step ? "done" : "";
-      if (n === step) li.setAttribute("aria-current", "step"); else li.removeAttribute("aria-current");
+      li.className = n === state.step ? "current" : canGo(n) ? "done" : "";
+      li.querySelector("button").disabled = n !== state.step && !canGo(n);
+      if (n === state.step) li.setAttribute("aria-current", "step"); else li.removeAttribute("aria-current");
     });
-    window.scrollTo(0, 0);
+  }
+
+  function goTo(n) {
+    if (n === state.step || !canGo(n)) return;
+    clearError();
+    if (n === 4) enterSend(); else show(n);
   }
 
   // ---------------------------------------------------------------- 1
@@ -440,7 +465,7 @@
     if (!state.practice) state.scores = Object.assign(recall("scores", {}), state.scores);
     $("claude-panel").open = mode === "claude";
     $("claude-panel").querySelector("summary").textContent =
-      mode === "claude" ? "Get Claude's suggestions" : "Want Claude to suggest directions instead?";
+      mode === "claude" ? "Get AI suggestions" : "Want AI to suggest directions instead?";
     renderSongs();
     show(3);
   }
@@ -510,6 +535,7 @@
     });
     $("empty-list").hidden = visible > 0;
     $("to-send").disabled = done === 0;
+    updateStepper();
   }
 
   function setView(view) {
@@ -565,7 +591,11 @@
   }
 
   async function importSheet(file) {
-    var result = HV.checkSheet(await readFile(file));
+    importRows(await readFile(file));
+  }
+
+  function importRows(rows) {
+    var result = HV.checkSheet(rows);
     var byId = {};
     state.songs.forEach(function (s) { byId[s.song_id] = s; });
     var onList = {};
@@ -592,6 +622,104 @@
     status("import-status", result.bad.length || flagged ? "warn" : "ok", parts);
     renderSongs();
     if (flagged) setView("flagged");
+  }
+
+
+  // ==================================================================
+  // AI help: one prompt that works in any assistant that reads attached files
+  // ==================================================================
+
+  var AI_PROMPT = [
+    "You're helping our church choose a \"direction\" for each worship song on a 1-5 Horizontal-Vertical scale. A direction describes which way a song speaks. It is not a rating of quality.",
+    "",
+    "I've attached two files:",
+    "- songs_for_claude.json: each song's lyrics, for you to read only",
+    "- scoring_sheet.csv: the sheet to fill in",
+    "",
+    "THE SCALE",
+    "1 Horizontal: sung about God, for the edification of the church (declaration, teaching, testimony, calls to worship)",
+    "2 Mostly Horizontal: mostly declaration, with a short line or bridge sung to God",
+    "3 Blend: a real mix, e.g. verses about God and a chorus to Him, with equal weight",
+    "4 Mostly Vertical: mostly sung to God, with some declaration",
+    "5 Vertical: sung to God throughout (prayer, praise, thanks, confession, surrender)",
+    "When a song falls between two numbers, choose the side it leans toward. Save 2, 3, and 4 for songs that really mix both.",
+    "",
+    "HOW TO DECIDE",
+    "- Who is the song talking to? God: toward 5. The congregation, the singer's own soul, or creation: toward 1.",
+    "- How does it refer to God? You, Your, Thee, Thou: toward 5. He, His, the Lord: toward 1.",
+    "- What is it doing? Asking God, or telling God who He is: toward 5. Telling people who God is, calling people to worship, or testimony (unless told to God): toward 1.",
+    "- If the verses and chorus point different ways, the chorus usually matters more. If they carry equal weight, it's a 3.",
+    "- Hymns that speak to people (\"ye saints\", \"my soul\") and gospel-story songs in \"He\" language are horizontal. A prayer song with one testimony verse is usually a 4. A declarative song with one bridge sung to God is a 2.",
+    "",
+    "NEVER REPRODUCE LYRICS",
+    "Never copy lyrics into your reply, the notes, or the file, not even short phrases. Describe the pattern instead, e.g. \"verses tell about God; chorus speaks to Him\".",
+    "",
+    "WHAT TO DO",
+    "1. Choose a direction for every song in the sheet. If a song has no lyrics, use what you know of it and say so in its note.",
+    "2. For every row, fill in:",
+    "   - score: the direction, a number from 1 to 5",
+    "   - confidence: high, or low if there are no lyrics and you don't know the song well, it's a medley, or you could honestly defend the neighboring direction",
+    "   - notes: one short line describing the pattern, with no lyrics",
+    "3. Keep every column and every row in the same order, and never change song_id.",
+    "4. Give me the completed sheet as a downloadable scoring_sheet.csv file. If you can't create files, put the whole sheet, header row included, in one CSV code block.",
+    "5. Then tell me in plain language how many songs landed at each direction, and list the low-confidence songs.",
+    "",
+    "Keep your language simple. I'm not technical."
+  ].join("\n");
+
+  var AI_GUIDES = {
+    claude: { name: "Claude", url: "https://claude.ai", back: "Download the scoring_sheet.csv file Claude makes, then import it below." },
+    chatgpt: { name: "ChatGPT", url: "https://chatgpt.com", back: "Download the scoring_sheet.csv file ChatGPT makes, then import it below." },
+    gemini: { name: "Gemini", url: "https://gemini.google.com", back: "Gemini usually shows the sheet as text. Use the copy button on that block, then paste it in step 3 below." },
+    other: { name: null, url: null, back: "Import the file it makes, or copy the sheet text it shows and paste it in step 3 below." }
+  };
+
+  function showAiGuide(which) {
+    var g = AI_GUIDES[which] ? which : "claude";
+    store("ai", g);
+    $("ai-tabs").querySelectorAll("button").forEach(function (b) {
+      var on = b.getAttribute("data-ai") === g;
+      b.classList.toggle("on", on);
+      b.setAttribute("aria-selected", String(on));
+    });
+    var guide = AI_GUIDES[g], list = $("ai-howto");
+    list.textContent = "";
+    list.appendChild(el("li", {}, guide.url
+      ? ["Open ", el("a", { href: guide.url, target: "_blank", rel: "noopener noreferrer", text: guide.name }), " and start a new chat."]
+      : ["Open any AI assistant that can read attached files, and start a new chat."]));
+    list.appendChild(el("li", { text: "Attach both files with its + or paperclip button." }));
+    list.appendChild(el("li", { text: "Copy the prompt below, paste it into the chat, and send it." }));
+    list.appendChild(el("li", { text: guide.back }));
+    if (g === "claude") list.appendChild(el("li", {}, ["Tagging often? A ",
+      el("a", { href: "../CLAUDE_PROJECT_SETUP.md", target: "_blank", rel: "noopener noreferrer", text: "Claude Project" }),
+      " remembers your church's house rules between sessions."]));
+    if (desktop) setUpDesktopLinks(list); else linkDocs(list);
+  }
+
+  /** Copies the prompt. If this window won't allow it, leaves the text selected and says how to copy. */
+  async function copyPrompt() {
+    var btn = $("copy-prompt"), box = $("ai-prompt"), copied = false;
+    try {
+      await Promise.race([navigator.clipboard.writeText(box.value),
+        new Promise(function (_, reject) { setTimeout(reject, 1500); })]);
+      copied = true;
+    } catch (e) {
+      box.focus();
+      box.select();
+      try { copied = document.execCommand("copy"); } catch (e2) { copied = false; }
+    }
+    btn.textContent = copied ? "Copied!"
+      : "Press " + (/Mac/.test(navigator.platform) ? "⌘C" : "Ctrl+C") + " to copy";
+    setTimeout(function () { btn.textContent = "Copy prompt"; }, copied ? 2000 : 5000);
+  }
+
+  /** Text pasted from a chat: drop a ```csv fence if there is one. */
+  function importPasted() {
+    var text = $("paste-sheet").value.trim()
+      .replace(/^```[a-z]*\s*\n/i, "").replace(/\n```\s*$/, "").trim();
+    if (!text) throw HV.UserError("Paste the sheet text first.");
+    importRows(HV.readTable(text));
+    $("paste-sheet").value = "";
   }
 
   // ---------------------------------------------------------------- 4
@@ -668,6 +796,7 @@
 
   async function runSend(songs) {
     state.sending = true;
+    updateStepper();
     updateSendButtons();
     $("send-bar").style.width = "0%";
     try {
@@ -676,6 +805,7 @@
       });
     } finally {
       state.sending = false;
+      updateStepper();
       $("send-counts").textContent = countsText(state.totals);
     }
   }
@@ -776,6 +906,10 @@
   // Wiring
   // ==================================================================
 
+  $("stepper").addEventListener("click", function (e) {
+    var b = e.target.closest("button[data-go]");
+    if (b) goTo(+b.getAttribute("data-go"));
+  });
   $("connect-form").addEventListener("submit", function (e) {
     e.preventDefault();
     guard(connect)();
@@ -813,6 +947,12 @@
     if (b) setView(b.getAttribute("data-view"));
   });
   $("save-claude").addEventListener("click", guard(saveClaudeFiles));
+  $("ai-tabs").addEventListener("click", function (e) {
+    var b = e.target.closest("button[data-ai]");
+    if (b) showAiGuide(b.getAttribute("data-ai"));
+  });
+  $("copy-prompt").addEventListener("click", copyPrompt);
+  $("import-paste").addEventListener("click", guard(importPasted));
   $("import-file").addEventListener("change", guard(async function (e) {
     var file = e.target.files[0];
     e.target.value = "";
@@ -847,6 +987,7 @@
 
   showMediaWhenLoaded();
   watchHowPanel();
+  $("ai-prompt").value = AI_PROMPT;
   if (desktop) {
     setUpDesktop();
     guard(connectWithSavedKey)();
@@ -858,5 +999,6 @@
     $("connect-form").hidden = true;
     $("web-note").hidden = false;
   }
+  showAiGuide(recall("ai", "claude"));
   show(1);
 })();
