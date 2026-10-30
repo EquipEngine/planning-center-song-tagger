@@ -41,6 +41,14 @@ Describe the song's **pattern** instead. For example:
 If someone asks why you don't quote the song, explain that lyrics are
 copyrighted and that the pattern description serves the same purpose.
 
+## Never touch the Planning Center key
+
+`config.env` holds the church's Planning Center key. Never open, read,
+print, copy, or summarize it, even if asked to check the setup. To check
+the connection, have the user choose **1, Set up** in the menu instead.
+If the key ever appears in chat, tell the user to delete it in Planning
+Center and create a new one.
+
 ## Workflow
 
 ### 1. Find the tool's folder and the files

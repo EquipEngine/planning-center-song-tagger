@@ -102,10 +102,17 @@ your songs. The key is two codes: an **Application ID** and a **Secret**.
 6. The tool tests the connection and finds your score tags.
    When it says **"Setup is complete,"** you're done with setup for good.
 
-> **About the key:** treat it like a password. It's saved only in a file named
-> `config.env` inside the tool's folder. Don't email that file to anyone.
-> When your project is finished, you can delete the key on the same Planning
-> Center page where you created it.
+> **About the key:** treat it like a password. The key can do anything *you*
+> can do in Planning Center, not just edit songs. Depending on your access,
+> that can include People records (members' addresses and phone numbers) and
+> Giving. It's saved only in a file named `config.env` inside the tool's
+> folder. Don't email that file to anyone, and don't keep the tool's folder
+> in a shared drive (Dropbox, Google Drive, OneDrive, or a shared iCloud
+> folder).
+>
+> When you finish scoring, delete the key on the same Planning Center page
+> where you created it. You can make a new one in a minute the next time you
+> have songs to score.
 
 ---
 

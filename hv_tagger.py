@@ -25,6 +25,7 @@ import csv
 import getpass
 import io
 import json
+import os
 import re
 import shutil
 import sys
@@ -139,6 +140,12 @@ def stamp():
     return datetime.now().strftime("%Y-%m-%d_%H%M%S")
 
 
+def safe_cell(value):
+    """Stop Excel from running a song title like '=HYPERLINK(...)' as a formula."""
+    s = str(value)
+    return "'" + s if s[:1] in ("=", "+", "-", "@", "\t", "\r") else s
+
+
 # ======================================================================
 # Settings file (config.env)
 # ======================================================================
@@ -164,9 +171,12 @@ def save_config(cfg):
     for key in ("PC_APP_ID", "PC_SECRET", "SCALE_GROUP"):
         if cfg.get(key):
             lines.append(f"{key} = {cfg[key]}")
-    CONFIG_PATH.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    # Create the file private from the start, so the key is never readable by others.
+    fd = os.open(CONFIG_PATH, os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o600)
+    with os.fdopen(fd, "w", encoding="utf-8") as f:
+        f.write("\n".join(lines) + "\n")
     try:
-        CONFIG_PATH.chmod(0o600)
+        CONFIG_PATH.chmod(0o600)  # also tightens a file made by an older version
     except Exception:
         pass
 
@@ -174,6 +184,17 @@ def save_config(cfg):
 # ======================================================================
 # Planning Center connection
 # ======================================================================
+
+class _NoRedirect(urllib.request.HTTPRedirectHandler):
+    """urllib would forward the Authorization header to wherever a redirect points."""
+
+    def redirect_request(self, req, fp, code, msg, headers, newurl):
+        raise UserError(f"Planning Center unexpectedly redirected to {newurl}. "
+                        "Nothing was sent there. Please report this as an issue.")
+
+
+_OPENER = urllib.request.build_opener(_NoRedirect)
+
 
 class PlanningCenter:
     """Talks to the real Planning Center Services API."""
@@ -197,7 +218,7 @@ class PlanningCenter:
         for attempt in range(6):
             req = urllib.request.Request(url, data=data, method=method, headers=headers)
             try:
-                with urllib.request.urlopen(req, timeout=30) as resp:
+                with _OPENER.open(req, timeout=30) as resp:
                     raw = resp.read()
                     return json.loads(raw) if raw else {}
             except urllib.error.HTTPError as e:
@@ -698,8 +719,8 @@ def cmd_prepare(export=None, out_dir=HERE, scope=None, skip_scored=None, group_n
         w.writerow(SHEET_FIELDS)
         for r in selected:
             other_tags = [t for t in song_tags_of(r) if not t.lower().startswith(prefix)]
-            w.writerow([row_id(r), (field(r, "Title") or "").strip(), "; ".join(other_tags),
-                        current_score(r), "", "", ""])
+            w.writerow([row_id(r), safe_cell((field(r, "Title") or "").strip()),
+                        safe_cell("; ".join(other_tags)), current_score(r), "", "", ""])
 
     songs = []
     for r in selected:
@@ -766,6 +787,9 @@ def cmd_check(sheet=None, quiet=False):
             continue
         if not sid:
             bad.append(f"row {line_no}: '{title}' has no song_id")
+            continue
+        if not sid.isdigit():
+            bad.append(f"row {line_no}: '{title}' has song_id '{sid}' (it should be only digits)")
             continue
         if not value:
             blank.append(title or sid)
@@ -860,11 +884,11 @@ def send(pc, songs, scale, log_path):
                 result, detail = "not found", "This song isn't in Planning Center (deleted or merged?)"
             except UserError as e:
                 w.writerow([datetime.now().isoformat(timespec="seconds"), s["song_id"],
-                            s["title"], s["score"], "stopped", str(e)])
+                            safe_cell(s["title"]), s["score"], "stopped", safe_cell(str(e))])
                 raise
             counts[result] += 1
             w.writerow([datetime.now().isoformat(timespec="seconds"), s["song_id"],
-                        s["title"], s["score"], result, detail])
+                        safe_cell(s["title"]), s["score"], result, detail])
             f.flush()
             print(f"  {i:>4}/{len(songs)}  {result:<12} {s['score']} {SCORE_NAMES[s['score']]:<18} "
                   f"{s['title'][:34]}")
