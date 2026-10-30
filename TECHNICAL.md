@@ -31,7 +31,7 @@ python3 hv_tagger.py demo --no-pause             # full practice run against an 
 ```
 
 `--scope` matches the `Song Tag N` values in the export exactly
-(case-insensitive). Pass `all`, or leave it out, to score every song.
+(case-insensitive). Pass `all`, or leave it out, to tag every song.
 
 ## Files
 
@@ -45,13 +45,13 @@ python3 hv_tagger.py demo --no-pause             # full practice run against an 
 
 `check` and `apply` accept `.csv` (comma-, semicolon-, or tab-separated;
 UTF-8, cp1252, or Latin-1) or `.xlsx`. The `.xlsx` reader is built in and
-reads the first sheet. Scores may be written as `5`, `5.0`, or `5 - Vertical`.
+reads the first sheet. Directions may be written as `5`, `5.0`, or `5 - Vertical`.
 
 ## How the scale group is resolved
 
 `SCALE_GROUP` defaults to `Horizontal Vertical Scale`. Within that group, each
-tag is matched to a score by the **leading digit** of its name, so
-`1 - Horizontal` and `1 Pure Declaration` both map to score 1. The tool
+tag is matched to a direction by the **leading digit** of its name, so
+`1 - Horizontal` and `1 Pure Declaration` both map to direction 1. The tool
 refuses to send anything unless all five digits are present.
 
 ## Planning Center API details
@@ -70,11 +70,11 @@ is HTTP Basic with the Personal Access Token's Client ID and Secret.
 
 1. Reads the song's current tags.
 2. Removes any tag from the scale group.
-3. Adds the new score tag.
+3. Adds the new direction tag.
 4. Posts the merged list.
 
 Every non-scale tag is preserved. If the song already has exactly the right
-score tag, no write happens, which makes re-runs idempotent.
+direction tag, no write happens, which makes re-runs idempotent.
 
 Tag groups and tags **cannot be created through the API**, so the admin
 creates them by hand in the Planning Center UI.
@@ -101,7 +101,7 @@ following steps:
 
 1. Load or create `scoring_calibration.md`. Creating it means a 10-song
    blind comparison with someone at the church.
-2. Score every song in `songs_for_claude.json` with a high or low
+2. Tag every song in `songs_for_claude.json` with a high or low
    confidence rating.
 3. Review either the low-confidence songs plus a random spot-check of 5,
    or every song in batches.

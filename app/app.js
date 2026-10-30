@@ -269,7 +269,7 @@
     $("connect-view").hidden = false;
     $("group-picker").hidden = true;
     status("connect-status", "ok", [el("b", { text: "Connected." }),
-      " Your scores go in the '" + group.name + "' tag group."]);
+      " Directions go in the '" + group.name + "' tag group."]);
     setTimeout(loadSongsFromPlanningCenter, 600);
   }
 
@@ -340,6 +340,7 @@
     show(2);
     clearError();
     $("scope").hidden = true;
+    $("next-bar").hidden = true;
     $("refresh-songs").hidden = true;
     $("load-progress").hidden = false;
     $("load-bar").style.width = "5%";
@@ -381,7 +382,24 @@
     });
     if (keep && keep.length) $("tag-all").checked = !document.querySelectorAll("#tag-options input[data-tag]:checked").length;
     $("scope").hidden = false;
+    $("next-bar").hidden = false;
     updateScope();
+  }
+
+  /** The "Next" bar stays pinned while the how-to-tag choice is out of view. */
+  function watchHowPanel() {
+    if (!("IntersectionObserver" in window)) return;
+    new IntersectionObserver(function (entries) {
+      $("next-bar").classList.toggle("away", entries[0].isIntersecting);
+    }, { threshold: 0.35 }).observe($("how-panel"));
+  }
+
+  function goToHowPanel() {
+    var panel = $("how-panel");
+    panel.scrollIntoView({ behavior: "smooth", block: "center" });
+    panel.classList.remove("pulse");
+    void panel.offsetWidth;  // restart the highlight
+    panel.classList.add("pulse");
   }
 
   function chosenTags() {
@@ -396,9 +414,12 @@
     var scored = inScope.filter(function (s) { return s.current_score; }).length;
     $("skip-line").hidden = !scored;
     $("skip-label").textContent = "Leave out the " + plural(scored, "song") +
-      " that already " + (scored === 1 ? "has" : "have") + " a score in Planning Center";
+      " that already " + (scored === 1 ? "has" : "have") + " a direction in Planning Center";
     var n = HV.selectSongs(state.songs, tags, $("skip-scored").checked).length;
     $("scope-count").textContent = n ? plural(n, "song") + " will be on your list." : "No songs match what you picked.";
+    $("how-count").textContent = n ? "For the " + plural(n, "song") + " you picked:" : "Pick at least one song first.";
+    $("next-count").textContent = plural(n, "song") + " picked";
+    $("to-how").disabled = !n;
     $("mode-self").disabled = $("mode-claude").disabled = !n;
   }
 
@@ -419,7 +440,7 @@
     if (!state.practice) state.scores = Object.assign(recall("scores", {}), state.scores);
     $("claude-panel").open = mode === "claude";
     $("claude-panel").querySelector("summary").textContent =
-      mode === "claude" ? "Get Claude's suggestions" : "Want Claude to suggest scores instead?";
+      mode === "claude" ? "Get Claude's suggestions" : "Want Claude to suggest directions instead?";
     renderSongs();
     show(3);
   }
@@ -480,7 +501,7 @@
   function updateProgress() {
     var total = state.selected.length;
     var done = state.selected.filter(function (s) { return (state.scores[s.song_id] || {}).score; }).length;
-    $("score-progress").textContent = done + " of " + total + " scored";
+    $("score-progress").textContent = done + " of " + total + " tagged";
     $("score-bar").style.width = (total ? (done / total) * 100 : 0) + "%";
     var visible = 0;
     Array.prototype.forEach.call($("song-list").children, function (li, i) {
@@ -537,7 +558,7 @@
       var missing = state.selected.length - withLyrics;
       status("claude-files-status", "ok", ["Saved both files. ",
         missing ? plural(missing, "song") + " had no lyrics in Planning Center (often older hymns); " +
-                  "Claude will score " + (missing === 1 ? "it" : "them") + " from what it knows of the song." : ""]);
+                  "Claude will suggest " + (missing === 1 ? "its direction" : "their directions") + " from what it knows of the song." : ""]);
     } finally {
       btn.disabled = false;
     }
@@ -559,11 +580,11 @@
       }
     });
     var flagged = result.good.filter(function (g) { return g.flagged; }).length;
-    var parts = [el("b", { text: "Imported " + plural(result.good.length, "score") + "." })];
+    var parts = [el("b", { text: "Imported " + plural(result.good.length, "direction") + "." })];
     if (flagged) parts.push(" " + plural(flagged, "song") + " " + (flagged === 1 ? "is" : "are") +
                             " marked Unsure and shown below; check those before sending.");
     if (added) parts.push(" " + plural(added, "song") + " from the sheet " + (added === 1 ? "was" : "were") + " added to your list.");
-    if (result.blank.length) parts.push(" " + plural(result.blank.length, "row") + " had no score.");
+    if (result.blank.length) parts.push(" " + plural(result.blank.length, "row") + " had no direction.");
     if (result.bad.length) {
       parts.push(" These rows were skipped:");
       parts.push(el("ul", {}, result.bad.slice(0, 10).map(function (b) { return el("li", { text: b }); })));
@@ -604,7 +625,7 @@
     warn.textContent = "";
     var unscored = state.selected.length - scored.length;
     if (unscored) warn.appendChild(el("p", { className: "muted",
-      text: plural(unscored, "song") + " without a score will be left alone." }));
+      text: plural(unscored, "song") + " without a direction will be left alone." }));
     var flagged = scored.filter(function (s) { return s.flagged; }).length;
     $("flagged-line").hidden = !flagged;
     $("flagged-label").textContent = "Also send the " + plural(flagged, "song") + " marked Unsure. " +
@@ -699,7 +720,7 @@
     });
     $("check-intro").textContent = state.pc.isPretend
       ? "In real use you'd open each song in Planning Center now. Here's what the pretend Planning Center shows:"
-      : "Open each song in Planning Center. Check that it shows the right score AND still has its other tags.";
+      : "Open each song in Planning Center. Check that it shows the right direction AND still has its other tags.";
     $("send-rest").textContent = "They look right. Send the other " + plural(state.rest.length, "song");
     $("phase-check").hidden = false;
   }
@@ -719,17 +740,17 @@
     showError(e.name === "UserError" ? e.message : "Something went wrong: " + e.message);
     $("done-title").textContent = "Stopped";
     $("done-text").textContent = "Sending stopped because of the problem above. Songs already sent keep their " +
-      "new score. When it's fixed, send again: songs that are already right are skipped.";
+      "new direction. When it's fixed, send again: songs that are already right are skipped.";
     $("phase-done").hidden = false;
   }
 
   function finish(n) {
     $("done-title").textContent = "All done!";
     $("done-text").textContent = state.pc.isPretend
-      ? "That's the whole process. In real use, every scored song now has its score tag in Planning Center, " +
+      ? "That's the whole process. In real use, every tagged song now has its direction tag in Planning Center, " +
         "and all its other tags are unchanged. When you're ready, " +
         (desktop ? "quit and reopen the app" : "reload this page") + " and connect with your real key."
-      : plural(n, "song") + " checked. Every scored song now has its score tag, and all other tags were kept. " +
+      : plural(n, "song") + " checked. Every tagged song now has its direction tag, and all other tags were kept. " +
         "If you're finished, delete your key on the Planning Center developer page" +
         (state.savedKey ? " and click “Forget saved key” at the top." : ".");
     $("phase-done").hidden = false;
@@ -781,6 +802,7 @@
   }));
   $("tag-options").addEventListener("change", onTagChange);
   $("skip-scored").addEventListener("change", updateScope);
+  $("to-how").addEventListener("click", goToHowPanel);
   $("mode-self").addEventListener("click", function () { startScoring("self"); });
   $("mode-claude").addEventListener("click", function () { startScoring("claude"); });
 
@@ -824,6 +846,7 @@
   });
 
   showMediaWhenLoaded();
+  watchHowPanel();
   if (desktop) {
     setUpDesktop();
     guard(connectWithSavedKey)();

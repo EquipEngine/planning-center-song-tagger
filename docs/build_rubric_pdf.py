@@ -40,13 +40,13 @@ rows = [
      "or surrender. Says \"You\" to God throughout."),
 ]
 
-story = [Paragraph("Horizontal ↔ Vertical Scoring Rubric", H1),
-         Paragraph("Score each song by how it speaks: 1 (about God) to 5 (to God)", SUB)]
-data = [[Paragraph("<para alignment='center'>Score</para>", HDR), Paragraph("Name", HDR),
+story = [Paragraph("Horizontal ↔ Vertical Rubric", H1),
+         Paragraph("Choose each song's direction by how it speaks: 1 (about God) to 5 (to God)", SUB)]
+data = [[Paragraph("<para alignment='center'>Direction</para>", HDR), Paragraph("Name", HDR),
          Paragraph("What it means", HDR)]]
 for n, name, desc in rows:
     data.append([Paragraph(n, NUM), Paragraph(f"<b>{name}</b>", BODY), Paragraph(desc, BODY)])
-t = Table(data, colWidths=[0.6 * inch, 1.35 * inch, 5.35 * inch])
+t = Table(data, colWidths=[0.85 * inch, 1.35 * inch, 5.1 * inch])
 style = [("BACKGROUND", (0, 0), (-1, 0), colors.HexColor("#333333")),
          ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
          ("GRID", (0, 0), (-1, -1), 0.4, colors.HexColor("#dddddd")),
@@ -72,7 +72,7 @@ q = [
     [Paragraph("• <i>You, Your, Thee, Thou</i> → toward 5<br/>"
                "• <i>He, His, the Lord, God, Jesus</i> → toward 1", SMALL),
      Paragraph("The chorus usually matters more, because it's what the congregation repeats. "
-               "If both carry equal weight, score a 3.", SMALL)],
+               "If both carry equal weight, it's a 3.", SMALL)],
 ]
 qt = Table(q, colWidths=[3.65 * inch, 3.65 * inch])
 qt.setStyle(TableStyle([("VALIGN", (0, 0), (-1, -1), "TOP"), ("LEFTPADDING", (0, 0), (-1, -1), 0),
@@ -95,7 +95,7 @@ story.append(bt)
 
 story.append(Paragraph("Notes column (optional)", H2))
 story.append(Paragraph(
-    "A few words about <i>why</i> you chose a score helps whoever reviews your work. For example: "
+    "A few words about <i>why</i> you chose a direction helps whoever reviews your work. For example: "
     "\"verses tell about God; chorus speaks to Him,\" \"call to the congregation to praise,\" "
     "\"prayer throughout,\" or \"retells the Christmas story.\" <b>Don't copy lyrics into the "
     "notes.</b> Lyrics are copyrighted, and the note should make sense without them.", SMALL))
@@ -104,5 +104,5 @@ story.append(Paragraph("Horizontal-Vertical Song Tagger for Planning Center · s
 
 SimpleDocTemplate(str(OUT), pagesize=LETTER, leftMargin=0.55 * inch, rightMargin=0.55 * inch,
                   topMargin=0.45 * inch, bottomMargin=0.45 * inch,
-                  title="Horizontal-Vertical Scoring Rubric", author="").build(story)
+                  title="Horizontal-Vertical Rubric", author="").build(story)
 print(f"Wrote {OUT}")

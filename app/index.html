@@ -7,7 +7,7 @@
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data:; media-src 'self'; connect-src 'self' https://api.planningcenteronline.com; form-action 'none'; base-uri 'none'">
 <meta name="referrer" content="no-referrer">
 <title>H↔V Song Tagger</title>
-<meta name="description" content="Score your Planning Center worship songs from 1 (sung about God) to 5 (sung to God).">
+<meta name="description" content="Tag each Planning Center worship song with its direction, from 1 (sung about God) to 5 (sung to God).">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect x='5' y='55' width='16' height='40' rx='3' fill='%23c0504d'/%3E%3Crect x='23' y='70' width='16' height='25' rx='3' fill='%23e8a37c'/%3E%3Crect x='41' y='65' width='16' height='30' rx='3' fill='%23bdb59e'/%3E%3Crect x='59' y='45' width='16' height='50' rx='3' fill='%237ba6c6'/%3E%3Crect x='77' y='15' width='16' height='80' rx='3' fill='%233d6b88'/%3E%3C/svg%3E">
 <link rel="stylesheet" href="app.css">
 </head>
@@ -26,7 +26,7 @@
   <ol class="wrap stepper" id="stepper">
     <li data-step="1"><span>1</span> Connect</li>
     <li data-step="2"><span>2</span> Choose songs</li>
-    <li data-step="3"><span>3</span> Score</li>
+    <li data-step="3"><span>3</span> Tag</li>
     <li data-step="4"><span>4</span> Send</li>
   </ol>
 </header>
@@ -39,7 +39,7 @@
   <section id="step1" class="step">
     <div id="connect-view">
       <h1>Connect to Planning Center</h1>
-      <p class="lead">The tagger needs a <b>Personal Access Token</b> so it can read your songs and update their score tags. A token is two codes: a Client ID and a Secret.</p>
+      <p class="lead">The tagger needs a <b>Personal Access Token</b> so it can read your songs and update their direction tags. A token is two codes: a Client ID and a Secret.</p>
 
       <div class="cols">
         <div class="panel">
@@ -63,7 +63,7 @@
           </form>
           <div id="connect-status" class="status" hidden></div>
           <div id="group-picker" hidden>
-            <h3>Which tag group holds your 1–5 scores?</h3>
+            <h3>Which tag group holds your 1–5 directions?</h3>
             <div id="group-list" class="choice-grid"></div>
             <button class="link" type="button" id="none-of-these">None of these. Show me how to set one up</button>
           </div>
@@ -75,7 +75,7 @@
             <ul>
               <li id="key-where">It's sent only to Planning Center, straight from this browser. This page is blocked from talking to anything else.</li>
               <li id="key-forget">It's never saved. Closing this tab forgets it.</li>
-              <li>The key can do anything <i>you</i> can do in Planning Center, so delete it on the developer page when you're finished scoring.</li>
+              <li>The key can do anything <i>you</i> can do in Planning Center, so delete it on the developer page when you're finished tagging.</li>
             </ul>
           </div>
           <div class="note">
@@ -88,8 +88,8 @@
     </div>
 
     <div id="setup-view" hidden>
-      <h1>Set up your score tags</h1>
-      <p class="lead">You're connected, but Planning Center doesn't have a 1–5 score tag group yet. You only do this once, and it takes about two minutes.</p>
+      <h1>Set up your direction tags</h1>
+      <p class="lead">You're connected, but Planning Center doesn't have a 1–5 direction tag group yet. You only do this once, and it takes about two minutes.</p>
       <div id="setup-incomplete" class="status warn" hidden></div>
 
       <div class="setup-grid">
@@ -105,7 +105,7 @@
           </figure>
         </div>
         <div class="panel">
-          <h3><span class="num">2</span> Add the score group and its tags</h3>
+          <h3><span class="num">2</span> Add the direction group and its tags</h3>
           <ol class="howto">
             <li>Click <b>Add Tag Group</b>.</li>
             <li>Name it <b>Horizontal Vertical Scale</b>. Leave <b>Allow multiple selections</b> off, then click <b>Save</b>.</li>
@@ -133,8 +133,8 @@
 
   <!-- ============================== Step 2 ============================== -->
   <section id="step2" class="step" hidden>
-    <h1>Choose the songs to score</h1>
-    <p class="lead">Pick which songs to score, then how you'd like to score them.</p>
+    <h1>Choose the songs to tag</h1>
+    <p class="lead">First pick which songs, then how you'd like to tag them.</p>
 
     <div class="load-row">
       <div id="load-status" class="status" hidden></div>
@@ -144,24 +144,30 @@
 
     <div id="scope" hidden>
       <div class="panel">
-        <h3>Which songs?</h3>
+        <h3 class="step-q"><span class="num">1</span> Which songs?</h3>
         <div id="tag-options" class="choice-list"></div>
-        <label class="check-line" id="skip-line"><input type="checkbox" id="skip-scored" checked> <span id="skip-label">Leave out songs that already have a score</span></label>
+        <label class="check-line" id="skip-line"><input type="checkbox" id="skip-scored" checked> <span id="skip-label">Leave out songs that already have a direction</span></label>
         <p class="muted" id="scope-count"></p>
       </div>
 
-      <h3 class="section-q">How do you want to score them?</h3>
+      <div class="panel how-panel" id="how-panel">
+      <h3 class="step-q"><span class="num">2</span> Next: how do you want to tag them?</h3>
+      <p class="muted" id="how-count"></p>
       <div class="mode-grid">
         <button type="button" class="mode-card" id="mode-self">
-          <b>Score them myself</b>
-          <span>Pick a number from 1 to 5 for each song, with the rubric beside you. Good for teams who want to talk through every song.</span>
+          <b>Tag them myself</b>
+          <span>Pick a direction from 1 to 5 for each song, with the rubric beside you. Good for teams who want to talk through every song.</span>
+          <em>Start tagging →</em>
         </button>
         <button type="button" class="mode-card" id="mode-claude">
-          <b>Have Claude suggest scores</b>
-          <span>Claude reads the lyrics and suggests a score for every song, marking the ones it's unsure about. You review them before anything is sent.</span>
+          <b>Have Claude suggest directions</b>
+          <span>Claude reads the lyrics and suggests a direction for every song, marking the ones it's unsure about. You review them before anything is sent.</span>
+          <em>Get Claude's help →</em>
         </button>
       </div>
+      </div>
     </div>
+
 
     <details class="panel alt-source" id="export-alt">
       <summary>Use a Songs export file instead</summary>
@@ -172,13 +178,17 @@
         <span>or drag it onto this box</span>
       </label>
     </details>
+    <div class="sticky-actions next-bar" id="next-bar" hidden>
+      <span id="next-count"></span>
+      <button class="btn primary" type="button" id="to-how">Next: how do you want to tag them? ↓</button>
+    </div>
   </section>
 
   <!-- ============================== Step 3 ============================== -->
   <section id="step3" class="step" hidden>
     <div class="step-head">
       <div>
-        <h1>Score each song</h1>
+        <h1>Tag each song</h1>
         <p class="lead">Pick the number for how each song speaks: <b>1</b> about God, for the edification of the church, up to <b>5</b> sung to God. Your choices are saved on this computer as you go.</p>
       </div>
       <div class="progress-box">
@@ -188,7 +198,7 @@
     </div>
 
     <details class="panel claude" id="claude-panel">
-      <summary>Let Claude suggest scores</summary>
+      <summary>Let Claude suggest directions</summary>
       <ol class="claude-steps">
         <li>
           <b>Save the files for Claude.</b> One has the lyrics for Claude to read (keep it private); the other is the sheet Claude fills in.
@@ -222,7 +232,7 @@
       <input type="search" id="search" placeholder="Find a song">
       <div class="seg" id="view-filter" role="group" aria-label="Show">
         <button type="button" data-view="all" class="on">All</button>
-        <button type="button" data-view="todo">Not scored</button>
+        <button type="button" data-view="todo">Not tagged</button>
         <button type="button" data-view="flagged">Unsure</button>
       </div>
     </div>
@@ -238,8 +248,8 @@
 
   <!-- ============================== Step 4 ============================== -->
   <section id="step4" class="step" hidden>
-    <h1>Send scores to Planning Center</h1>
-    <p class="lead">This changes only the score tag on each song. Every other tag is kept.</p>
+    <h1>Send directions to Planning Center</h1>
+    <p class="lead">This changes only the direction tag on each song. Every other tag is kept.</p>
 
     <div class="cols">
       <div class="panel">
@@ -252,7 +262,7 @@
           <p>First, send just a few songs so you can check them in Planning Center.</p>
           <div class="btn-row">
             <button class="btn primary" type="button" id="send-test">Send 3 test songs</button>
-            <button class="btn ghost" type="button" id="back-to-3">← Back to scoring</button>
+            <button class="btn ghost" type="button" id="back-to-3">← Back to tagging</button>
           </div>
         </div>
 
@@ -271,7 +281,7 @@
           <p id="done-text"></p>
           <div class="btn-row">
             <button class="btn ghost" type="button" id="dl-log">Save a record of what was sent</button>
-            <button class="btn ghost" type="button" id="score-more">Score more songs</button>
+            <button class="btn ghost" type="button" id="score-more">Tag more songs</button>
           </div>
         </div>
       </div>
@@ -287,37 +297,37 @@
     </div>
 
     <div id="whats-next" hidden>
-      <h2>What's next: using your scores</h2>
-      <p class="lead">Your scores are ordinary song tags, so they work everywhere Planning Center uses tags.</p>
+      <h2>What's next: using your directions</h2>
+      <p class="lead">Your directions are ordinary song tags, so they work everywhere Planning Center uses tags.</p>
       <div class="next-item panel">
         <div>
           <h3>Plan a service with them</h3>
           <ol class="howto">
             <li>In a plan, add a song. The <b>Select Song</b> panel opens.</li>
             <li>Click <b>Filter</b>, then the <b>Tags</b> tab.</li>
-            <li>Under <b class="group-name">your score group</b>, tick the scores you want. For an opening of declaration, try <b>1</b> and <b>2</b>; for a time of response, <b>4</b> and <b>5</b>.</li>
+            <li>Under <b class="group-name">your direction group</b>, tick the directions you want. For an opening of declaration, try <b>1</b> and <b>2</b>; for a time of response, <b>4</b> and <b>5</b>.</li>
             <li>The list narrows to matching songs. Pick one.</li>
           </ol>
         </div>
-        <figure class="media" hidden><video src="media/plan-with-scores.mp4" controls muted playsinline preload="metadata"></video></figure>
+        <figure class="media" hidden><video src="media/plan-with-directions.mp4" controls muted playsinline preload="metadata"></video></figure>
       </div>
       <div class="next-item panel">
         <div>
           <h3>Filter your song library</h3>
           <ol class="howto">
             <li>Open <b>Songs</b> and click <b>Filter</b>.</li>
-            <li>Choose the <b>Tags</b> tab, then pick a score under <b class="group-name">your score group</b>.</li>
+            <li>Choose the <b>Tags</b> tab, then pick a direction under <b class="group-name">your direction group</b>.</li>
           </ol>
           <p class="muted">Handy for seeing how your most-used songs lean, or finding a vertical song for a season of prayer.</p>
         </div>
-        <figure class="media" hidden><img src="media/filter-songs.webp" alt="The Songs filter in Planning Center, on the Tags tab, with the score group's menu"></figure>
+        <figure class="media" hidden><img src="media/filter-songs.webp" alt="The Songs filter in Planning Center, on the Tags tab, with the direction group's menu"></figure>
       </div>
       <div class="next-item panel">
         <div>
-          <h3>See or change a song's score</h3>
-          <p>Open any song. Its score is listed under <b>Tags</b>, in <b class="group-name">your score group</b>. You can change it right there, and the tagger will see the new score next time.</p>
+          <h3>See or change a song's direction</h3>
+          <p>Open any song. Its direction is listed under <b>Tags</b>, in <b class="group-name">your direction group</b>. You can change it right there, and the tagger will see the new direction next time.</p>
         </div>
-        <figure class="media" hidden><img src="media/song-tags.webp" alt="A song page in Planning Center showing its score under Tags"></figure>
+        <figure class="media" hidden><img src="media/song-tags.webp" alt="A song page in Planning Center showing its direction under Tags"></figure>
       </div>
     </div>
   </section>

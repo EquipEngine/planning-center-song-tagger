@@ -1,14 +1,14 @@
-# Scoring with regular Claude (no Cowork needed)
+# Tagging with regular Claude (no Cowork needed)
 
 Use this route if your church uses Claude on the web or in the desktop app
 but doesn't use Cowork. You'll set up a **Claude Project** once. After that,
-each scoring session goes like this:
+each tagging session goes like this:
 
 1. Upload two files.
 2. Review the songs Claude isn't sure about.
 3. Download the finished sheet.
 
-Then you check and send the scores with **Start Tagger**, just like in the
+Then you check and send the directions with **Start Tagger**, just like in the
 Admin Guide.
 
 ---
@@ -17,20 +17,21 @@ Admin Guide.
 
 1. Go to [claude.ai](https://claude.ai) and sign in.
 2. Click **Projects** in the left sidebar, then **Create project**.
-3. Name it **Song Scoring**.
+3. Name it **Song Tagging**.
 4. Open the project's **instructions** setting (it may be labeled "Set project
    instructions" or "Instructions"). Copy **everything in the gray box below**
    and paste it in. Save.
 5. In the project's **knowledge/files** area, upload **RUBRIC.md** from the
    tool's folder.
 
-Do this once. You'll reuse the project every time you score songs.
+Do this once. You'll reuse the project every time you tag songs.
 
 ### Project instructions (copy all of this)
 
 ```
-You help our church score worship songs on a 1–5 Horizontal–Vertical scale
-for Planning Center. The rubric is in the project file RUBRIC.md; follow it.
+You help our church choose a direction for each worship song on a 1–5
+Horizontal–Vertical scale for Planning Center. The rubric is in the project
+file RUBRIC.md; follow it.
 
 SCALE
 1 Horizontal: sung about God, for the edification of the church
@@ -53,35 +54,35 @@ house rules Claude writes for you here.)
 
 WHEN I UPLOAD scoring_sheet.csv AND songs_for_claude.json
 1. If the HOUSE RULES section above is empty, offer a quick calibration
-   first. Pick 10 varied songs, including some borderline ones. I score
-   them without seeing your scores, then you score them, and we compare.
+   first. Pick 10 varied songs, including some borderline ones. I tag
+   them without seeing your directions, then you tag them, and we compare.
    For each disagreement, work out the principle behind my choice. At the
    end, write out the house rules as short numbered principles for me to
    paste into these instructions.
-2. Score every song. For each one, give a score of 1–5, a confidence
+2. Tag every song. For each one, give a direction of 1–5, a confidence
    rating (high or low), and a one-line note describing the pattern, with
    no lyrics.
    Mark confidence LOW when any of these is true:
    - there are no lyrics and you don't know the song well
    - the song is a medley or looks unusual
-   - you could honestly defend the neighboring score
+   - you could honestly defend the neighboring direction
    - it's unclear how a house rule applies
-   If the score comes from your own knowledge rather than the lyrics, say
+   If the direction comes from your own knowledge rather than the lyrics, say
    so in the note.
-3. Show me how many songs landed at each score. Then show a table of only
+3. Show me how many songs landed at each direction. Then show a table of only
    the LOW-confidence songs, plus 5 random high-confidence songs as a
-   spot-check. Use these columns: #, title, score, note, why unsure.
-4. Let me confirm or change scores. If I correct a song, ask what
+   spot-check. Use these columns: #, title, direction, note, why unsure.
+4. Let me confirm or change directions. If I correct a song, ask what
    principle I used, apply it to any other songs it affects, and show me
    those too.
 5. When I'm done, create the completed scoring_sheet.csv as a
    downloadable file:
    - keep every original column and the row order exactly
    - never change song_id
-   - fill in score, confidence, and notes
+   - fill in the score column (the direction, 1–5), confidence, and notes
    - in confidence, write "reviewed" for songs I confirmed or changed, and
      "high" for the rest
-   If you can't create files, list the scores one number per line, in the
+   If you can't create files, list the directions one number per line, in the
    same order as the sheet, so I can paste them into the score column.
 
 Keep your language simple. I'm not technical.
@@ -89,17 +90,17 @@ Keep your language simple. I'm not technical.
 
 ---
 
-## Each time you score songs
+## Each time you tag songs
 
-1. Run **Start Tagger**, choose **2, "Make a scoring sheet,"** and follow the
+1. Run **Start Tagger**, choose **2, "Make a tagging sheet,"** and follow the
    steps. This creates two files in the tool's folder:
    - **scoring_sheet.csv**
    - **songs_for_claude.json**
-2. Open your **Song Scoring** project in Claude and start a new chat.
+2. Open your **Song Tagging** project in Claude and start a new chat.
 3. Attach both files and type:
-   *"Here's my scoring sheet and lyrics. Please score these songs."*
+   *"Here's my tagging sheet and lyrics. Please tag these songs."*
 4. **The first time only:** say **yes** to the calibration.
-   1. Score the 10 songs Claude lists, using the rubric. It takes about
+   1. Tag the 10 songs Claude lists, using the rubric. It takes about
       10 minutes.
    2. At the end, Claude gives you a short list of **house rules**.
    3. Copy them into the **OUR HOUSE RULES** section of the project
@@ -107,16 +108,16 @@ Keep your language simple. I'm not technical.
 
    After that, every future session follows your church's rules
    automatically.
-5. Review the songs Claude flags as unsure. Agree with each score or change
+5. Review the songs Claude flags as unsure. Agree with each direction or change
    it. Claude explains its reasoning for each one.
 6. When you're finished, ask Claude for the completed sheet.
    1. Download it.
    2. Rename it **scoring_sheet.csv**.
    3. Move it into the tool's folder, replacing the old one. You can also
       leave it in Downloads, because Start Tagger looks there too.
-7. Run **Start Tagger** to check and send the scores:
+7. Run **Start Tagger** to check and send the directions:
    1. Choose **3, "Check."** It should say everything looks good.
-   2. Choose **4, "Send scores to Planning Center."**
+   2. Choose **4, "Send directions to Planning Center."**
 
 **If Claude gave you a list of numbers instead of a file:**
 
@@ -131,13 +132,13 @@ Keep your language simple. I'm not technical.
 
 - **Privacy.** `songs_for_claude.json` contains the lyrics from your
   Planning Center account. Upload it only to your own Claude account, and
-  don't share it anywhere else. Claude reads the lyrics to choose scores
+  don't share it anywhere else. Claude reads the lyrics to choose directions
   but won't repeat them back to you.
 - **Large libraries.** If you have more than about 200 songs, make a few
-  smaller scoring sheets by choosing one song list at a time in Start Tagger
+  smaller tagging sheets by choosing one song list at a time in Start Tagger
   (for example, "List: A" first, then "List: B").
 - **Claude can be wrong.** That's why it flags the songs it's unsure about
   and shows you a random spot-check. The house rules make each session more
   accurate than the last.
-- **Prefer to score by hand?** You can always type the scores into the sheet
+- **Prefer to tag by hand?** You can always type the directions into the sheet
   yourself. See Option A in the [Admin Guide](ADMIN_GUIDE.md).

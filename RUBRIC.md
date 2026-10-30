@@ -1,11 +1,11 @@
-# Horizontal ↔ Vertical Scoring Rubric
+# Horizontal ↔ Vertical Rubric
 
-Use this rubric to score each song from 1 to 5. A printable one-page version
+Use this rubric to choose a direction for each song, from 1 to 5. A printable one-page version
 is at [docs/rubric-one-pager.pdf](docs/rubric-one-pager.pdf).
 
 ## The scale
 
-| Score | Name | What it means |
+| Direction | Name | What it means |
 |---|---|---|
 | **1** | Horizontal | The song is sung **about** God, for the edification of the church. It declares truth, teaches, or tells a testimony. It describes who God is and what He has done, and never speaks to Him for long. |
 | **2** | Mostly Horizontal | Mostly declaration. A bridge, a repeated tag, or a line or two speaks directly to God, but most of the song is about Him. |
@@ -41,7 +41,7 @@ the overall balance.
 **4. If the verses and chorus point different ways, which matters more?**
 
 Usually the **chorus**, because it's what the congregation repeats and
-remembers. If both carry equal weight, score a 3.
+remembers. If both carry equal weight, it's a 3.
 
 ## When you're stuck between two numbers
 
@@ -62,8 +62,8 @@ Some situations come up often:
 
 ## Notes (optional)
 
-The scoring sheet has a **notes** column. A few words about *why* you chose a
-score helps anyone who reviews your work later. For example:
+The tagging sheet has a **notes** column. A few words about *why* you chose a
+direction helps anyone who reviews your work later. For example:
 
 - "Verses tell about God; chorus speaks to Him"
 - "Call to the congregation to praise; never speaks to God"
@@ -74,19 +74,19 @@ score helps anyone who reviews your work later. For example:
 notes should make sense to someone who knows the song even without the words
 in front of them.
 
-## Scoring as a team
+## Tagging as a team
 
-If more than one person is scoring:
+If more than one person is tagging:
 
 1. Have everyone read this page first.
-2. Score the same 10 songs separately, then compare.
-3. Talk through the songs where your scores differed. That conversation is
-   what makes everyone's scores consistent.
+2. Tag the same 10 songs separately, then compare.
+3. Talk through the songs where your directions differed. That conversation is
+   what makes everyone's choices consistent.
 
 ## For advanced users: strict vs. loose
 
 The guidance above, "pick the side it leans toward," is the **loose** way to
-score. A **strict** scorer saves 1 and 5 for songs with no trace of the other
+tag. A **strict** approach saves 1 and 5 for songs with no trace of the other
 direction, so more songs land on 2, 3, or 4. Either approach works. What
 matters is that everyone at your church uses the same one. To compare the
-two, add a second score column to a copy of your sheet.
+two, add a second direction column to a copy of your sheet.

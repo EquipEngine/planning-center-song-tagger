@@ -11,9 +11,9 @@ Most people should double-click one of these instead of running this file:
 That opens a simple menu. Technical users can also run steps directly:
 
     python3 hv_tagger.py setup      Save and test your Planning Center key
-    python3 hv_tagger.py prepare    Make a scoring sheet from a Songs export
-    python3 hv_tagger.py check      Check a filled-in scoring sheet
-    python3 hv_tagger.py apply      Send scores to Planning Center
+    python3 hv_tagger.py prepare    Make a tagging sheet from a Songs export
+    python3 hv_tagger.py check      Check a filled-in tagging sheet
+    python3 hv_tagger.py apply      Send directions to Planning Center
     python3 hv_tagger.py demo       Practice with sample songs (changes nothing)
     python3 hv_tagger.py discover   List every song tag group in your account
 
@@ -598,14 +598,14 @@ def cmd_setup():
     cfg["SCALE_GROUP"] = match["name"]
     save_config(cfg)
     scale = resolve_scale(pc, match["name"])
-    ok(f"Found '{match['name']}' with all five score tags:")
+    ok(f"Found '{match['name']}' with all five direction tags:")
     for n in range(1, 6):
         print(f"         {n}  ->  {scale[n]['name']}")
     print("\nSetup is complete. You won't need to do this step again on this computer.")
 
 
 # ======================================================================
-# Step: prepare a scoring sheet
+# Step: prepare a tagging sheet
 # ======================================================================
 
 def find_recent_exports():
@@ -651,7 +651,7 @@ def parse_number_list(text, maximum):
 
 
 def cmd_prepare(export=None, out_dir=HERE, scope=None, skip_scored=None, group_name=None):
-    heading("Step 2: Make a scoring sheet")
+    heading("Step 2: Make a tagging sheet")
     path = choose_file(export, "Planning Center Songs export (.csv)", find_recent_exports)
     rows = read_table(path)
     if not rows or field(rows[0], "Id") is None or field(rows[0], "Title") is None:
@@ -677,7 +677,7 @@ def cmd_prepare(export=None, out_dir=HERE, scope=None, skip_scored=None, group_n
     print(f"\nThis export has {len(rows)} songs.")
 
     if scope is None:
-        print("\nWhich songs do you want to score?")
+        print("\nWhich songs do you want to tag?")
         print(f"    0) All {len(rows)} songs")
         for i, (tag, count) in enumerate(options, 1):
             print(f"   {i:2d}) Songs tagged '{tag}'  ({count} song{'' if count == 1 else 's'})")
@@ -697,13 +697,13 @@ def cmd_prepare(export=None, out_dir=HERE, scope=None, skip_scored=None, group_n
                 if chosen is None or any(t.lower() in chosen for t in song_tags_of(r))]
     scored = [r for r in selected if current_score(r)]
     if scored:
-        print(f"\n{plural(len(scored), 'song')} in your selection already {'has' if len(scored) == 1 else 'have'} a score in Planning Center.")
+        print(f"\n{plural(len(scored), 'song')} in your selection already {'has' if len(scored) == 1 else 'have'} a direction in Planning Center.")
         if skip_scored is None:
-            skip_scored = ask_yes("Leave those out, so you only score the new ones?", "yes")
+            skip_scored = ask_yes("Leave those out, so you only tag the new ones?", "yes")
         if skip_scored:
             selected = [r for r in selected if not current_score(r)]
     if not selected:
-        raise UserError("No songs matched what you picked, so there's nothing to score.")
+        raise UserError("No songs matched what you picked, so there's nothing to tag.")
 
     out_dir = Path(out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
@@ -711,7 +711,7 @@ def cmd_prepare(export=None, out_dir=HERE, scope=None, skip_scored=None, group_n
     if sheet.exists():
         backup = out_dir / f"scoring_sheet_backup_{stamp()}.csv"
         shutil.copy2(sheet, backup)
-        warn(f"You already had a scoring sheet, so I saved a copy as {backup.name}")
+        warn(f"You already had a tagging sheet, so I saved a copy as {backup.name}")
 
     selected.sort(key=lambda r: (field(r, "Title") or "").lower())
     with sheet.open("w", newline="", encoding="utf-8-sig") as f:
@@ -729,26 +729,26 @@ def cmd_prepare(export=None, out_dir=HERE, scope=None, skip_scored=None, group_n
                       "has_lyrics": bool(lyr), "lyrics": lyr})
     claude_file = out_dir / "songs_for_claude.json"
     claude_file.write_text(json.dumps({
-        "about": ("Lyrics for scoring on the Horizontal-Vertical scale. Contains copyrighted "
+        "about": ("Lyrics for choosing each song's direction on the Horizontal-Vertical scale. Contains copyrighted "
                   "lyrics: keep private, never post or share."),
         "count": len(songs), "songs": songs}, indent=2, ensure_ascii=False), encoding="utf-8")
 
     missing = [s["title"] for s in songs if not s["has_lyrics"]]
     print()
-    ok(f"Made your scoring sheet with {len(selected)} songs:")
+    ok(f"Made your tagging sheet with {len(selected)} songs:")
     print(f"       {sheet}")
     ok(f"Saved lyrics for Claude (optional) in {claude_file.name}")
     if missing:
         warn(f"{plural(len(missing), 'song')} {'has' if len(missing) == 1 else 'have'} no lyrics in Planning Center (often older hymns). "
-             "Score those from what you know of the song.")
-    print("\nNext: open scoring_sheet.csv in Excel, Numbers, or Google Sheets and type a")
-    print("number from 1 to 5 in the 'score' column for each song (see the Rubric).")
+             "Choose the direction from what you know of the song.")
+    print("\nNext: open scoring_sheet.csv in Excel, Numbers, or Google Sheets. For each song,")
+    print("type its direction, a number from 1 to 5, in the 'score' column (see the Rubric).")
     print("Keep the file as CSV when you save. Then come back and choose 'Check'.")
     return sheet
 
 
 # ======================================================================
-# Step: check a scoring sheet
+# Step: check a tagging sheet
 # ======================================================================
 
 SCORE_RE = re.compile(r"^([1-5])(?:\.0+)?(?:\s*[-:]?\s*[A-Za-z].*)?$")
@@ -769,14 +769,14 @@ def find_sheets():
 
 def cmd_check(sheet=None, quiet=False):
     if not quiet:
-        heading("Step 3: Check your scoring sheet")
-    path = choose_file(sheet, "scoring sheet", find_sheets)
+        heading("Step 3: Check your tagging sheet")
+    path = choose_file(sheet, "tagging sheet", find_sheets)
     rows = read_table(path)
     if not rows:
-        raise UserError("That scoring sheet is empty.")
+        raise UserError("That tagging sheet is empty.")
     if field(rows[0], "song_id") is None or field(rows[0], "score") is None:
-        raise UserError("That file is missing the 'song_id' or 'score' column. Please don't "
-                        "rename or delete the columns in the scoring sheet.")
+        raise UserError("That file is missing the 'song_id' or 'score' column (the direction, 1-5). "
+                        "Please don't rename or delete the columns in the tagging sheet.")
 
     good, blank, bad, seen = [], [], [], {}
     for line_no, r in enumerate(rows, start=2):
@@ -796,7 +796,7 @@ def cmd_check(sheet=None, quiet=False):
             continue
         m = SCORE_RE.match(value)
         if not m:
-            bad.append(f"row {line_no}: '{title}' has score '{value}' (use 1, 2, 3, 4 or 5)")
+            bad.append(f"row {line_no}: '{title}' has '{value}' in the 'score' column (the direction should be 1, 2, 3, 4 or 5)")
             continue
         if sid in seen:
             bad.append(f"row {line_no}: '{title}' is listed twice (also row {seen[sid]})")
@@ -806,10 +806,10 @@ def cmd_check(sheet=None, quiet=False):
         good.append({"song_id": sid, "title": title, "score": int(m.group(1)),
                      "flagged": confidence in LOW_CONFIDENCE})
 
-    print(f"\nScoring sheet: {path.name}")
-    ok(f"{plural(len(good), 'song')} with a valid score")
+    print(f"\nTagging sheet: {path.name}")
+    ok(f"{plural(len(good), 'song')} with a valid direction")
     if blank:
-        warn(f"{plural(len(blank), 'song')} without a score yet:")
+        warn(f"{plural(len(blank), 'song')} without a direction yet:")
         for t in blank[:10]:
             print(f"         - {t}")
         if len(blank) > 10:
@@ -829,27 +829,27 @@ def cmd_check(sheet=None, quiet=False):
             print(f"         - {t}")
         if len(flagged) > 10:
             print(f"         ...and {len(flagged) - 10} more")
-        print("       Have someone look at these. When a score is confirmed, change 'low'")
+        print("       Have someone look at these. When a direction is confirmed, change 'low'")
         print("       to 'reviewed' (or clear the cell).")
 
     if good:
         counts = Counter(g["score"] for g in good)
         biggest = max(counts.values())
-        print("\nHow your scores are spread out:")
+        print("\nHow your directions are spread out:")
         for n in range(1, 6):
             bar = "#" * round(counts.get(n, 0) / biggest * 30) if biggest else ""
             print(f"   {n} {SCORE_NAMES[n]:<18} {counts.get(n, 0):>4}  {bar}")
     if not blank and not bad and not flagged:
-        print("\nEverything looks good. When you're ready, choose 'Send scores'.")
+        print("\nEverything looks good. When you're ready, choose 'Send directions'.")
     return path, good, len(blank) + len(bad)
 
 
 # ======================================================================
-# Step: apply scores to Planning Center
+# Step: send directions to Planning Center
 # ======================================================================
 
 def pick_test_songs(songs):
-    """One low score, one high score, and one in the middle when possible."""
+    """One low direction (1 side), one high (5 side), and one in the middle when possible."""
     ordered = sorted(songs, key=lambda s: s["score"])
     picks = [ordered[0], ordered[-1]]
     middle = [s for s in ordered if s["score"] not in (ordered[0]["score"], ordered[-1]["score"])]
@@ -903,12 +903,12 @@ def report(counts, log_path):
 
 
 def cmd_apply(sheet=None, mode=None, pc=None, group_name=None, log_dir=LOG_DIR, assume_yes=False):
-    heading("Step 4: Send scores to Planning Center")
+    heading("Step 4: Send directions to Planning Center")
     path, good, problems = cmd_check(sheet, quiet=True)
     if not good:
-        raise UserError("There are no scores to send yet. Fill in the 'score' column first.")
+        raise UserError("There are no directions to send yet. Fill in the 'score' column (the direction, 1-5) first.")
     if problems and not assume_yes:
-        if not ask_yes(f"\nSend the {len(good)} songs that do have valid scores and skip the rest?",
+        if not ask_yes(f"\nSend the {len(good)} songs that do have a valid direction and skip the rest?",
                        "yes"):
             print("OK, nothing was sent.")
             return
@@ -929,7 +929,7 @@ def cmd_apply(sheet=None, mode=None, pc=None, group_name=None, log_dir=LOG_DIR, 
     ok(f"Using tag group '{group}'")
     log_path = Path(log_dir) / f"sent_{stamp()}.csv"
 
-    print("\nThis only changes the score tag on each song. All other tags are kept.")
+    print("\nThis only changes the direction tag on each song. All other tags are kept.")
     if mode is None:
         mode = "test"
     if mode == "test":
@@ -940,10 +940,10 @@ def cmd_apply(sheet=None, mode=None, pc=None, group_name=None, log_dir=LOG_DIR, 
         print("\nNow open Planning Center > Services > Songs and look at these songs:")
         for s in batch:
             print(f"   - {s['title']}  (should show: {scale[s['score']]['name']})")
-        print("Check that each one shows the right score AND still has its other tags.")
+        print("Check that each one shows the right direction AND still has its other tags.")
         if not assume_yes and not ask_yes("\nDid they look right? Send the rest now?", "no"):
             print("\nNo problem. Nothing else was changed. When you're ready, choose")
-            print("'Send scores' again. Songs that are already right are skipped.")
+            print("'Send directions' again. Songs that are already right are skipped.")
             return
         done = {s["song_id"] for s in batch}
         rest = [s for s in good if s["song_id"] not in done]
@@ -981,11 +981,11 @@ def cmd_demo(no_pause=False):
 
     cmd_prepare(export=export, out_dir=DEMO_OUT, scope="all", skip_scored=True,
                 group_name=DEFAULT_GROUP)
-    print("\n(One sample song already had a score, so it was left out.)")
+    print("\n(One sample song already had a direction, so it was left out.)")
     pause()
 
-    heading("Scoring (done for you in this practice run)")
-    print("Normally you'd now type a 1-5 score for each song. For practice, we'll use")
+    heading("Tagging (done for you in this practice run)")
+    print("Normally you'd now type a 1-5 direction for each song. For practice, we'll use")
     print("a sheet that's already filled in:")
     print(f"   {filled}")
     print("\nA few rows from it:")
@@ -1008,7 +1008,7 @@ def cmd_demo(no_pause=False):
     print(f"\nAfter: '{sample['title']}' now has:")
     for t in pretend.describe(sample["song_id"]):
         print(f"   - {t}")
-    print("\nIts other tags were kept and the score tag was added.")
+    print("\nIts other tags were kept and the direction tag was added.")
     pause()
 
     heading("Running it a second time")
@@ -1038,10 +1038,10 @@ def cmd_where():
     print(f"This tool's folder:\n   {HERE}\n")
     items = [
         ("config.env", "your Planning Center key (keep private)"),
-        ("scoring_sheet.csv", "the sheet you fill in with 1-5 scores"),
-        ("songs_for_claude.json", "lyrics, only for letting Claude suggest scores (keep private)"),
+        ("scoring_sheet.csv", "the sheet you fill in with 1-5 directions"),
+        ("songs_for_claude.json", "lyrics, only for letting Claude suggest directions (keep private)"),
         ("logs/", "a record of every song sent to Planning Center"),
-        ("RUBRIC.md / docs/", "how to choose a score, plus a printable one-page version"),
+        ("RUBRIC.md / docs/", "how to choose a direction, plus a printable one-page version"),
     ]
     for name, desc in items:
         mark = "   " if (HERE / name.split(" ")[0].rstrip("/")).exists() else "(not yet) "
@@ -1050,9 +1050,9 @@ def cmd_where():
 
 MENU = [
     ("1", "Set up / test my Planning Center connection", cmd_setup),
-    ("2", "Make a scoring sheet from a Songs export", cmd_prepare),
-    ("3", "Check my scoring sheet", cmd_check),
-    ("4", "Send scores to Planning Center", cmd_apply),
+    ("2", "Make a tagging sheet from a Songs export", cmd_prepare),
+    ("3", "Check my tagging sheet", cmd_check),
+    ("4", "Send directions to Planning Center", cmd_apply),
     ("5", "Practice with sample songs (changes nothing)", cmd_demo),
     ("6", "Where are my files?", cmd_where),
 ]
@@ -1090,22 +1090,22 @@ def menu():
 
 def main():
     ap = argparse.ArgumentParser(
-        description="Score Planning Center songs on a 1-5 Horizontal-Vertical scale.",
+        description="Tag Planning Center songs with a 1-5 Horizontal-Vertical direction.",
         epilog="Run with no arguments for the menu.")
     sub = ap.add_subparsers(dest="cmd")
     sub.add_parser("setup", help="Save and test your Planning Center key")
-    p = sub.add_parser("prepare", help="Make a scoring sheet from a Songs export")
+    p = sub.add_parser("prepare", help="Make a tagging sheet from a Songs export")
     p.add_argument("--export", help="Path to the Planning Center Songs export CSV")
     p.add_argument("--scope", help='"all" or comma-separated song tags, e.g. "List: A,List: B"')
     g = p.add_mutually_exclusive_group()
     g.add_argument("--skip-scored", dest="skip_scored", action="store_true", default=None,
-                   help="Leave out songs that already have a score")
+                   help="Leave out songs that already have a direction")
     g.add_argument("--include-scored", dest="skip_scored", action="store_false",
-                   help="Include songs that already have a score")
-    c = sub.add_parser("check", help="Check a filled-in scoring sheet")
-    c.add_argument("--sheet", help="Path to the scoring sheet (.csv or .xlsx)")
-    a = sub.add_parser("apply", help="Send scores to Planning Center")
-    a.add_argument("--sheet", help="Path to the scoring sheet (.csv or .xlsx)")
+                   help="Include songs that already have a direction")
+    c = sub.add_parser("check", help="Check a filled-in tagging sheet")
+    c.add_argument("--sheet", help="Path to the tagging sheet (.csv or .xlsx)")
+    a = sub.add_parser("apply", help="Send directions to Planning Center")
+    a.add_argument("--sheet", help="Path to the tagging sheet (.csv or .xlsx)")
     m = a.add_mutually_exclusive_group()
     m.add_argument("--test", dest="mode", action="store_const", const="test",
                    help="Send 3 songs first, then ask before the rest (default)")

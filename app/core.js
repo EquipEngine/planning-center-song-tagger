@@ -260,7 +260,7 @@
       return { song_id: s.song_id, title: s.title, has_lyrics: !!lyr, lyrics: lyr };
     });
     return JSON.stringify({
-      about: "Lyrics for scoring on the Horizontal-Vertical scale. Contains copyrighted " +
+      about: "Lyrics for choosing each song's direction on the Horizontal-Vertical scale. Contains copyrighted " +
              "lyrics: keep private, never post or share.",
       count: list.length, songs: list }, null, 2);
   }
@@ -280,10 +280,10 @@
   var SCORE_RE = /^([1-5])(?:\.0+)?(?:\s*[-:]?\s*[A-Za-z].*)?$/;
 
   function checkSheet(rows) {
-    if (!rows.length) throw UserError("That scoring sheet is empty.");
+    if (!rows.length) throw UserError("That sheet is empty.");
     if (field(rows[0], "song_id") === null || field(rows[0], "score") === null) {
       throw UserError("That file is missing the 'song_id' or 'score' column. Please don't " +
-                      "rename or delete the columns in the scoring sheet.");
+                      "rename or delete the columns in the sheet.");
     }
     var good = [], blank = [], bad = [], seen = {};
     rows.forEach(function (r, idx) {
@@ -299,7 +299,7 @@
       }
       if (!value) { blank.push(title || sid); return; }
       var m = SCORE_RE.exec(value);
-      if (!m) { bad.push("row " + line + ": '" + title + "' has score '" + value + "' (use 1, 2, 3, 4 or 5)"); return; }
+      if (!m) { bad.push("row " + line + ": '" + title + "' has '" + value + "' in the score column (use 1, 2, 3, 4 or 5)"); return; }
       if (seen[sid]) { bad.push("row " + line + ": '" + title + "' is listed twice (also row " + seen[sid] + ")"); return; }
       seen[sid] = line;
       var confidence = String(field(r, "confidence") || "").trim();
