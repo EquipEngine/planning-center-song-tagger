@@ -133,7 +133,7 @@ one-page version: [docs/rubric-one-pager.pdf](docs/rubric-one-pager.pdf).
 
 ## Credit and license
 
-This tool was originally developed by the worship team at Wawasee Bible Church.
+Built by your friends at [EquipEngine](https://equipengine.com).
 It's free to use and adapt under the MIT License (see [LICENSE](LICENSE)).
 
 This project isn't affiliated with or endorsed by Planning Center.
