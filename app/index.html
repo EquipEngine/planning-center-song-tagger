@@ -48,11 +48,30 @@
           <div id="web-note" class="status warn" hidden>
             <b>Connecting needs the HV Song Tagger app.</b> Planning Center doesn't let web pages use a key, so in a browser this page can only run the practice. Try it with the sample songs, then use the app for your real songs. <a href="../">About the app</a>
           </div>
-          <ol class="howto" id="connect-howto">
-            <li>Open the <a href="https://api.planningcenteronline.com/personal_access_tokens" target="_blank" rel="noopener noreferrer">Planning Center developer page</a> and sign in.</li>
-            <li>Under <b>Personal Access Tokens</b>, create a new one. Name it something like “Song tagging.”</li>
-            <li>Copy the two codes into the boxes below. The Secret is shown only once, so keep that page open until you've connected.</li>
-          </ol>
+          <div id="connect-howto">
+            <ol class="howto">
+              <li>Open the <a href="https://api.planningcenteronline.com/personal_access_tokens" target="_blank" rel="noopener noreferrer">Planning Center developer page</a> and sign in. Use a login that can edit songs in Services.</li>
+              <li>Click <b>New Personal Access Token</b>, type a description like “Song Tagger,” and click <b>Submit</b>. Leave the Versions as they are.</li>
+              <li>Copy the <b>Client ID</b> and the <b>Secret</b> into the boxes below. The Secret is shown only once, so don't close that window until you've connected.</li>
+            </ol>
+            <details class="key-help">
+              <summary>Show me with pictures</summary>
+              <ol class="key-steps">
+                <li>
+                  <p>On the developer page, click <b>New Personal Access Token</b>.</p>
+                  <figure class="media"><img src="media/connect-1-new-token.webp" alt="The Personal Access Tokens page in Planning Center, with the New Personal Access Token button" loading="lazy"></figure>
+                </li>
+                <li>
+                  <p>Type a <b>Description</b>, such as “Song Tagger.” Leave the Versions as they are, then click <b>Submit</b>.</p>
+                  <figure class="media"><img src="media/connect-2-describe.webp" alt="The New Personal Access Token form, with a description typed in and the Submit button" loading="lazy"></figure>
+                </li>
+                <li>
+                  <p>Click <b>Copy</b> next to the <b>Client ID</b> and paste it below. Do the same for the <b>Secret</b>, then click <b>Close</b> only after you've connected.</p>
+                  <figure class="media"><img src="media/connect-3-copy-codes.webp" alt="The Personal Access Token created box, showing the Client ID and Secret with Copy buttons" loading="lazy"></figure>
+                </li>
+              </ol>
+            </details>
+          </div>
           <form id="connect-form" autocomplete="off">
             <label for="client-id">Client ID</label>
             <input id="client-id" type="text" spellcheck="false" autocapitalize="off" required>
@@ -72,7 +91,7 @@
         </div>
 
         <aside class="side">
-          <div class="note safe">
+          <div class="note safe" id="key-note">
             <h3>Your key stays private</h3>
             <ul>
               <li id="key-where">It's sent only to Planning Center, straight from this browser. This page is blocked from talking to anything else.</li>

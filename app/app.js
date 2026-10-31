@@ -1126,6 +1126,7 @@
     linkDocs();
     $("connect-howto").hidden = true;
     $("connect-form").hidden = true;
+    $("key-note").hidden = true;  // no key is entered here
     $("web-note").hidden = false;
   }
   showAiGuide(recall("ai", "claude"));

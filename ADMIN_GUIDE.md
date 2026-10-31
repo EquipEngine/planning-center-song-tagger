@@ -67,14 +67,24 @@ songs and update their tags. The key is two codes: a **Client ID** and a
 1. In the app, click the **Planning Center developer page** link, or open
    `https://api.planningcenteronline.com/personal_access_tokens` in your
    browser, and sign in.
-2. Under **Personal Access Tokens**, create a new one. Name it something like
-   "Song tagging."
-3. Copy the **Client ID** and paste it into the app. Do the same with the
-   **Secret**. The Secret is shown only once, so keep that page open until
-   you've connected.
-4. Leave **Remember this key on this computer** ticked if you'd like the app to
+2. Click **New Personal Access Token**.
+
+   ![The Personal Access Tokens page, with the New Personal Access Token button](app/media/connect-1-new-token.webp)
+
+3. Type a **Description**, such as "Song Tagger." Leave the Versions as they
+   are, then click **Submit**.
+
+   ![The New Personal Access Token form, with a description and the Submit button](app/media/connect-2-describe.webp)
+
+4. Click **Copy** next to the **Client ID** and paste it into the app. Do the
+   same with the **Secret**. The Secret is shown only once, so don't click
+   **Close** until you've connected.
+
+   ![The Personal Access Token created box, with the Client ID, the Secret, and Copy buttons](app/media/connect-3-copy-codes.webp)
+
+5. Leave **Remember this key on this computer** ticked if you'd like the app to
    reconnect by itself next time. Untick it if others use this computer.
-5. Click **Connect**.
+6. Click **Connect**.
 
 > **About the key:** treat it like a password. The key can do anything *you*
 > can do in Planning Center, not just edit songs. Depending on your access,

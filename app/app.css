@@ -57,6 +57,13 @@ main.wrap { padding-top: 44px; padding-bottom: 120px; }
 .note p { margin: 0 0 12px; font-size: 15px; color: var(--muted); }
 .howto { padding-left: 20px; margin: 0 0 18px; }
 .howto li + li { margin-top: 6px; }
+.key-help { margin: -6px 0 18px; border: 1px solid var(--line); border-radius: 10px; background: var(--soft); }
+.key-help > summary { cursor: pointer; padding: 10px 14px; font-weight: 600; color: var(--accent); }
+.key-help[open] > summary { border-bottom: 1px solid var(--line); }
+.key-steps { margin: 0; padding: 14px 16px 4px 36px; }
+.key-steps li { margin-bottom: 18px; }
+.key-steps p { margin: 0 0 8px; }
+.key-steps .media { background: #fff; }
 
 /* forms */
 label { display: block; font-weight: 650; font-size: 14px; margin: 14px 0 6px; }
