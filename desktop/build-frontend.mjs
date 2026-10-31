@@ -18,6 +18,7 @@ for (const f of ["index.html", "app.css", "core.js", "app.js"]) {
 if (existsSync(join(root, "app", "media"))) {
   cpSync(join(root, "app", "media"), join(dist, "media"), { recursive: true });
 }
+cpSync(join(root, "brand"), join(dist, "brand"), { recursive: true });
 cpSync(join(root, "examples", "sample_songs_export.csv"), join(dist, "examples", "sample_songs_export.csv"));
 
 const page = join(dist, "index.html");

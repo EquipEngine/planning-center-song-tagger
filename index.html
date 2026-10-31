@@ -8,12 +8,14 @@
 <meta property="og:title" content="Horizontal–Vertical Song Tagger for Planning Center">
 <meta property="og:description" content="Tag every worship song with a direction from 1 (sung about God) to 5 (sung to God). Free, Mac and Windows, no coding required.">
 <meta property="og:type" content="website">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect x='5' y='55' width='16' height='40' rx='3' fill='%23c0504d'/%3E%3Crect x='23' y='70' width='16' height='25' rx='3' fill='%23e8a37c'/%3E%3Crect x='41' y='65' width='16' height='30' rx='3' fill='%23bdb59e'/%3E%3Crect x='59' y='45' width='16' height='50' rx='3' fill='%237ba6c6'/%3E%3Crect x='77' y='15' width='16' height='80' rx='3' fill='%233d6b88'/%3E%3C/svg%3E">
+<link rel="icon" href="brand/favicon.ico" sizes="any">
+<link rel="icon" href="brand/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="brand/apple-touch-icon.png">
 <style>
   :root {
-    --s1: #c0504d; --s2: #e8a37c; --s3: #bdb59e; --s4: #7ba6c6; --s5: #3d6b88;
+    --s1: #b07a1a; --s2: #e3be6a; --s3: #cfc8b8; --s4: #8db0d4; --s5: #2f5d8c;
     --ink: #1f2328; --muted: #57606a; --line: #e3e6ea; --bg: #ffffff; --soft: #f6f4f0;
-    --accent: #3d6b88; --accent-dark: #2c4f66;
+    --accent: #2f5d8c; --accent-dark: #234870;
     --radius: 14px;
     --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   }
@@ -34,8 +36,7 @@
   nav { position: sticky; top: 0; z-index: 10; background: rgba(255,255,255,.92); backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
   nav .wrap { display: flex; align-items: center; justify-content: space-between; height: 60px; }
   .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; color: var(--ink); text-decoration: none; }
-  .brand .bars { display: flex; align-items: flex-end; gap: 2px; height: 22px; }
-  .brand .bars i { width: 5px; border-radius: 2px; display: block; }
+  .brand .mark { display: block; }
   nav ul { display: flex; gap: 22px; list-style: none; margin: 0; padding: 0; font-size: 15px; }
   nav ul a { color: var(--muted); text-decoration: none; }
   nav ul a:hover { color: var(--ink); }
@@ -62,7 +63,7 @@
   .scale-row { display: grid; grid-template-columns: 44px 1fr; gap: 12px; align-items: center; padding: 9px 0; border-top: 1px solid var(--line); }
   .scale-row:first-of-type { border-top: none; }
   .chip { width: 44px; height: 44px; border-radius: 10px; color: #fff; font-weight: 800; font-size: 20px; display: grid; place-items: center; }
-  .chip.c2, .chip.c3 { color: #2b2b2b; }
+  .chip.c2, .chip.c3, .chip.c4 { color: #2b2b2b; }
   .scale-row b { display: block; font-size: 15px; }
   .scale-row span { font-size: 14px; color: var(--muted); }
   .c1 { background: var(--s1); } .c2 { background: var(--s2); } .c3 { background: var(--s3); } .c4 { background: var(--s4); } .c5 { background: var(--s5); }
@@ -74,7 +75,7 @@
   @media (max-width: 600px) { .grid-3, .grid-4 { grid-template-columns: 1fr; } }
   .card { background: #fff; border: 1px solid var(--line); border-radius: var(--radius); padding: 24px; }
   .card p { margin: 0; color: var(--muted); font-size: 16px; }
-  .icon { width: 40px; height: 40px; border-radius: 10px; display: grid; place-items: center; background: #eef3f7; color: var(--accent); margin-bottom: 14px; }
+  .icon { width: 40px; height: 40px; border-radius: 10px; display: grid; place-items: center; background: #eaf0f7; color: var(--accent); margin-bottom: 14px; }
   .icon svg { width: 22px; height: 22px; }
 
   /* steps */
@@ -100,7 +101,7 @@
 
   /* paths */
   .path { display: flex; flex-direction: column; }
-  .path .tag { align-self: flex-start; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; padding: 3px 10px; border-radius: 999px; background: #eef3f7; color: var(--accent); margin-bottom: 14px; }
+  .path .tag { align-self: flex-start; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; padding: 3px 10px; border-radius: 999px; background: #eaf0f7; color: var(--accent); margin-bottom: 14px; }
   .path ul { margin: 14px 0 20px; padding-left: 18px; color: var(--muted); font-size: 15px; }
   .path .btn { margin-top: auto; align-self: flex-start; padding: 10px 16px; font-size: 15px; }
   .path.featured { border: 2px solid var(--accent); }
@@ -170,7 +171,7 @@
 <nav>
   <div class="wrap">
     <a class="brand" href="#top" aria-label="Home">
-      <span class="bars" aria-hidden="true"><i class="c1" style="height:14px"></i><i class="c2" style="height:9px"></i><i class="c3" style="height:11px"></i><i class="c4" style="height:17px"></i><i class="c5" style="height:22px"></i></span>
+      <img class="mark" src="brand/crossed-arrows-primary.svg" width="34" height="34" alt="">
       H↔V Song Tagger
     </a>
     <ul>

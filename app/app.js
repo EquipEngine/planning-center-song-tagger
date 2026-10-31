@@ -133,11 +133,17 @@
       desktop.invoke("open_url", { url: a.href }).catch(function (err) { showError(String(err)); });
     });
     $("key-where").textContent = "It's sent only to Planning Center, straight from this app. Nothing else can see it.";
-    var store = /Windows/.test(navigator.userAgent) ? "Windows Credential Manager" : "your Mac's Keychain";
+    var windows = /Windows/.test(navigator.userAgent);
+    var store = windows ? "Windows Credential Manager" : "your Mac's Keychain";
     $("key-store").textContent = store;
     $("remember-line").hidden = false;
-    $("key-forget").textContent = "If you tick “Remember”, it's kept in " + store + ", which only you can open. " +
-      "Otherwise quitting the app forgets it.";
+    $("key-forget").textContent = "“Remember” is ticked unless you untick it. Then the key is kept in " + store +
+      ", which is locked with your " + (windows ? "Windows" : "Mac") + " password. " +
+      "If you untick it, quitting the app forgets the key.";
+    var you = document.createElement("i");
+    you.textContent = "you";
+    $("key-delete").replaceChildren("The key can do anything ", you, " can do in Planning Center. When you're done " +
+      "tagging for good, delete it on the developer page and click “Forget saved key” here.");
     $("foot-text").textContent = "Open source under the MIT License. Runs entirely on your computer: no account, no server, no tracking.";
   }
 

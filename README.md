@@ -1,3 +1,5 @@
+<img src="brand/crossed-arrows-primary.svg" width="96" alt="">
+
 # Horizontal ↔ Vertical Song Tagger for Planning Center
 
 Give every song in your Planning Center Services library a direction from 1 to 5,

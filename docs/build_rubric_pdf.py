@@ -25,7 +25,8 @@ NUM = ParagraphStyle("NUM", parent=BODY, fontName="Helvetica-Bold", fontSize=14,
                      alignment=TA_CENTER, textColor=colors.white)
 FOOT = ParagraphStyle("FOOT", parent=BODY, fontName="Helvetica-Oblique", fontSize=7.5,
                       alignment=TA_CENTER, textColor=colors.HexColor("#999999"), spaceBefore=6)
-COLORS = ["#c0504d", "#e8a37c", "#bdb59e", "#7ba6c6", "#3d6b88"]
+NUM_DARK = ParagraphStyle("NUM_DARK", parent=NUM, textColor=colors.HexColor("#2b2b2b"))  # on the light middle colors
+COLORS = ["#b07a1a", "#e3be6a", "#cfc8b8", "#8db0d4", "#2f5d8c"]
 
 rows = [
     ("1", "Horizontal", "Sung <b>about</b> God, for the edification of the church. Declares truth, teaches, "
@@ -45,7 +46,7 @@ story = [Paragraph("Horizontal ↔ Vertical Rubric", H1),
 data = [[Paragraph("<para alignment='center'>Direction</para>", HDR), Paragraph("Name", HDR),
          Paragraph("What it means", HDR)]]
 for n, name, desc in rows:
-    data.append([Paragraph(n, NUM), Paragraph(f"<b>{name}</b>", BODY), Paragraph(desc, BODY)])
+    data.append([Paragraph(n, NUM if n in "15" else NUM_DARK), Paragraph(f"<b>{name}</b>", BODY), Paragraph(desc, BODY)])
 t = Table(data, colWidths=[0.85 * inch, 1.35 * inch, 5.1 * inch])
 style = [("BACKGROUND", (0, 0), (-1, 0), colors.HexColor("#333333")),
          ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
