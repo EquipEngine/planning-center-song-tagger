@@ -126,6 +126,14 @@
   .first .safe-note { margin-top: 24px; max-width: 820px; color: var(--muted); }
 
   /* faq */
+  .faq-body { max-width: 760px; color: var(--muted); }
+  .faq-body h4 { color: var(--ink); font-size: 15px; margin: 20px 0 6px; }
+  .faq-body ol { margin: 0; padding-left: 22px; }
+  .faq-body ol li { padding: 3px 0; }
+  .faq-body ul { margin: 6px 0 0; padding-left: 20px; }
+  .faq-body code { font-size: 14px; color: var(--ink); }
+  .faq-body figure { margin: 14px 0 0; }
+  .faq-body img, .faq-body video { display: block; max-width: 100%; height: auto; border: 1px solid var(--line); border-radius: 10px; background: #fff; }
   details { border-top: 1px solid var(--line); padding: 18px 0; }
   details:last-of-type { border-bottom: 1px solid var(--line); }
   summary { cursor: pointer; font-weight: 650; font-size: 17px; list-style: none; display: flex; justify-content: space-between; gap: 16px; }
@@ -232,7 +240,7 @@
       <div class="card dir">
         <div class="dir-head"><div class="chip c5">5</div><div><h3>Vertical</h3><span>Sung <b>to</b> God</span></div></div>
         <p>Songs and expressions that ascribe worth to God. Their direction is upward, and they're often a response to the revelation of Jesus. These songs echo what heaven is already doing.</p>
-        <p class="examples">For example: <i>Holy, Holy, Holy</i> · <i>Great Are You, Lord</i> · <i>Holy Forever</i></p>
+        <p class="examples">For example: <i>Holy, Holy, Holy</i> · <i>Great Are You, Lord</i></p>
       </div>
       <div class="card dir">
         <div class="dir-head"><div class="chip c1">1</div><div><h3>Horizontal</h3><span>Sung <b>about</b> God, edifying one another</span></div></div>
@@ -408,6 +416,33 @@
     <div class="faq-wrap">
       <details><summary>Is a vertical song better than a horizontal one?</summary><p>No. Both directions are biblical, and healthy corporate worship needs both. A directional rating describes how a song speaks, not its quality or its worth. A church may lean one way for a season, and that's fine. The point is to choose on purpose.</p></details>
       <details><summary>Do I need to know how to code?</summary><p>No. You download the app, paste in a key from Planning Center, and click a directional rating for each song. There's nothing else to install.</p></details>
+      <details id="setup-tags"><summary>How do I set up the tags in Planning Center?</summary>
+        <div class="faq-body">
+          <p>You only do this once. When you connect, the app looks for these tags and shows you the same steps if they're missing.</p>
+          <h4>1. Open the tag editor</h4>
+          <ol>
+            <li>In Planning Center, open <b>Services</b>, then <b>Songs</b>.</li>
+            <li>Click <b>Actions</b>, then <b>Edit Tags</b>.</li>
+            <li>Stay on the <b>Song</b> tab.</li>
+          </ol>
+          <figure><img src="app/media/find-tags.gif" alt="Opening Songs, then Actions, then Edit Tags in Planning Center Services" loading="lazy"></figure>
+          <h4>2. Add the group and its five tags</h4>
+          <ol>
+            <li>Click <b>Add Tag Group</b>.</li>
+            <li>Name it <b>Horizontal Vertical Scale</b>. Leave <b>Allow multiple selections</b> off, then click <b>Save</b>.</li>
+            <li>In the new group, add these five tags. Each one must <b>start with its number</b>:
+              <ul>
+                <li><code>1 - Horizontal</code></li>
+                <li><code>2 - Mostly Horizontal</code></li>
+                <li><code>3 - Blend</code></li>
+                <li><code>4 - Mostly Vertical</code></li>
+                <li><code>5 - Vertical</code></li>
+              </ul>
+            </li>
+          </ol>
+          <figure><video src="app/media/create-tag-group.mp4#t=0.1" controls muted playsinline preload="metadata"></video></figure>
+        </div>
+      </details>
       <details><summary>Will it change anything else in Planning Center?</summary><p>No. The app changes only the 1–5 directional rating tag on each song and keeps every other tag. It also sends 3 songs first so you can check them before it does the rest.</p></details>
       <details><summary>Do I need Claude or any other AI?</summary><p>No. You can tag every song yourself with the printed rubric. AI is optional and makes the job faster: Claude, ChatGPT, or Gemini suggests a directional rating for every song and flags only the songs it's unsure about for you to review.</p></details>
       <details><summary>Why does my computer warn me about it?</summary><p>Apple and Microsoft show a warning for programs that aren't registered with them, which costs a yearly fee. This free app isn't registered yet. <a href="#first-open">Here's how to open it anyway</a>, which you only have to do once.</p></details>
