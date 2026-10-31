@@ -18,7 +18,9 @@
     scores: {},          // song_id -> {score, flagged, confidence, notes}
     mode: "self", view: "all", query: "",
     log: [], totals: {}, results: {}, sending: false,
-    savedKey: false      // the desktop app has a key in the Keychain / Credential Manager
+    savedKey: false,     // the desktop app has a key in the Keychain / Credential Manager
+    charts: {},          // song_id -> chord chart, for the lyrics panel (kept in memory only)
+    lyricsFor: null      // song_id shown in the lyrics panel
   };
 
   /** Looks enough like fetch() for core.js, but the request is made by the app. */
@@ -179,6 +181,7 @@
 
   function show(step) {
     state.step = step;
+    if (step !== 3) closeLyrics();
     [1, 2, 3, 4].forEach(function (n) { $("step" + n).hidden = n !== step; });
     updateStepper();
     window.scrollTo(0, 0);
@@ -399,6 +402,7 @@
     $("refresh-songs").hidden = !fromPlanningCenter;
     state.songs = loaded.songs;
     state.tagOptions = loaded.tagOptions;
+    state.charts = {};  // a refresh may bring changed lyrics
     status("load-status", "ok", ["Loaded ", el("b", { text: label }), "."]);
 
     var box = $("tag-options");
@@ -502,7 +506,18 @@
     }
     var title = el("div", { className: "title", text: s.title || "(no title)" });
     if (sc.flagged) title.appendChild(el("span", { className: "unsure", text: "Unsure" }));
+    var lyrBtn = el("button", { type: "button", className: "lyr-btn", text: "View lyrics",
+      "data-lyrics": s.song_id, "aria-label": "View lyrics for " + (s.title || "this song") });
 
+    var li = el("li", { className: "song" + (sc.flagged ? " flagged" : "") + (state.lyricsFor === s.song_id ? " viewing" : "") },
+      [el("div", {}, [title, metaEl, lyrBtn]), pickerFor(s)]);
+    if (sc.notes) li.appendChild(el("div", { className: "note-text", text: "Note: " + sc.notes }));
+    li.hidden = !matchesView(s);
+    return li;
+  }
+
+  function pickerFor(s) {
+    var sc = state.scores[s.song_id] || {};
     var picker = el("div", { className: "picker", "data-id": s.song_id });
     [1, 2, 3, 4, 5].forEach(function (n) {
       var on = sc.score === n;
@@ -512,12 +527,7 @@
     });
     picker.appendChild(el("button", { type: "button", className: "flag" + (sc.flagged ? " on" : ""), text: "Unsure",
       "data-flag": "1", "aria-pressed": String(!!sc.flagged), title: "Mark this song for someone to double-check" }));
-
-    var li = el("li", { className: "song" + (sc.flagged ? " flagged" : "") },
-      [el("div", {}, [title, metaEl]), picker]);
-    if (sc.notes) li.appendChild(el("div", { className: "note-text", text: "Note: " + sc.notes }));
-    li.hidden = !matchesView(s);
-    return li;
+    return picker;
   }
 
   function renderSongs() {
@@ -554,22 +564,130 @@
 
   function onPick(e) {
     var btn = e.target.closest("button");
+    if (btn && btn.hasAttribute("data-lyrics")) return openLyrics(btn.getAttribute("data-lyrics"));
     var picker = btn && btn.closest(".picker");
     if (!picker) return;
     var id = picker.getAttribute("data-id");
-    var cur = state.scores[id] || {};
-    if (btn.hasAttribute("data-flag")) {
-      setScore(id, { flagged: !cur.flagged, confidence: cur.flagged ? "reviewed" : "low" });
-    } else {
-      var n = +btn.getAttribute("data-score");
-      setScore(id, { score: cur.score === n ? 0 : n });
-    }
-    var i = state.selected.findIndex(function (s) { return s.song_id === id; });
-    $("song-list").children[i].replaceWith(songRow(state.selected[i]));
-    var again = $("song-list").children[i].querySelector(
+    pick(id, btn.hasAttribute("data-flag") ? "flag" : +btn.getAttribute("data-score"));
+    var where = picker.closest("#lyrics-panel") ? $("lyr-pick") : $("song-list").children[indexOf(id)];
+    var again = where.querySelector(
       btn.hasAttribute("data-flag") ? "[data-flag]" : '[data-score="' + btn.getAttribute("data-score") + '"]');
     if (again) again.focus();
+  }
+
+  /** Sets a song's rating (1-5, clicking the same one again clears it) or toggles Unsure. */
+  function pick(id, choice) {
+    var cur = state.scores[id] || {};
+    if (choice === "flag") setScore(id, { flagged: !cur.flagged, confidence: cur.flagged ? "reviewed" : "low" });
+    else setScore(id, { score: cur.score === choice ? 0 : choice });
+    var i = indexOf(id);
+    $("song-list").children[i].replaceWith(songRow(state.selected[i]));
+    if (state.lyricsFor === id) $("lyr-pick").replaceChildren(pickerFor(state.selected[i]));
     updateProgress();
+  }
+
+  function indexOf(id) {
+    return state.selected.findIndex(function (s) { return s.song_id === id; });
+  }
+
+  // ---------------------------------------------------------------- lyrics panel
+  async function openLyrics(id) {
+    var i = indexOf(id);
+    if (i < 0) return;
+    var s = state.selected[i];
+    var prev = state.lyricsFor;
+    state.lyricsFor = id;
+    [prev, id].forEach(function (x) {
+      var j = x == null ? -1 : indexOf(x);
+      if (j >= 0) $("song-list").children[j].classList.toggle("viewing", x === id);
+    });
+    $("lyr-title").textContent = s.title || "(no title)";
+    var meta = s.tags.slice();
+    if (s.current_score) meta.push("Now " + s.current_score + " " + HV.SCORE_NAMES[s.current_score] + " in Planning Center");
+    $("lyr-meta").textContent = meta.join(" · ");
+    $("lyr-pick").replaceChildren(pickerFor(s));
+    $("lyr-pos").textContent = "Song " + (i + 1) + " of " + state.selected.length;
+    $("lyr-prev").disabled = neighbor(i, -1) < 0;
+    $("lyr-next").disabled = neighbor(i, 1) < 0;
+    var panel = $("lyrics-panel");
+    if (!panel.classList.contains("open")) {
+      panel.classList.add("open");
+      panel.setAttribute("aria-hidden", "false");
+      $("lyr-title").focus();
+    }
+    var body = $("lyr-body");
+    body.scrollTop = 0;
+    if (!(id in state.charts)) {
+      body.replaceChildren(el("p", { className: "muted", text: "Getting the lyrics from Planning Center…" }));
+      try {
+        state.charts[id] = await HV.songChart(state.pc, s);
+      } catch (e) {
+        if (state.lyricsFor === id) {
+          body.replaceChildren(el("p", { className: "muted", text: "The lyrics couldn't be loaded. " + e.message }));
+        }
+        return;
+      }
+    }
+    if (state.lyricsFor === id) body.replaceChildren(lyricsView(state.charts[id]));
+  }
+
+  function lyricsView(chart) {
+    var sections = HV.lyricSections(chart);
+    if (!sections.length) {
+      return el("p", { className: "muted", text: "Planning Center doesn't have lyrics for this song. " +
+        "Choose its rating from what you know of the song." });
+    }
+    var frag = document.createDocumentFragment();
+    sections.forEach(function (sec) {
+      var box = el("div", { className: "lyr-sec" }, [sec.label ? el("h3", { text: sec.label }) : null]);
+      sec.stanzas.forEach(function (lines) {
+        box.appendChild(el("p", {}, lines.map(function (line) { return el("span", { text: line }); })));
+      });
+      frag.appendChild(box);
+    });
+    frag.appendChild(el("p", { className: "lyr-note",
+      text: "From the first arrangement in Planning Center that has words. Shown here only; the app doesn't save it." }));
+    return frag;
+  }
+
+  /** The next song in the list that's showing, in direction dir (1 or -1), or -1. */
+  function neighbor(i, dir) {
+    for (var j = i + dir; j >= 0 && j < state.selected.length; j += dir) {
+      if (matchesView(state.selected[j])) return j;
+    }
+    return -1;
+  }
+
+  function stepLyrics(dir) {
+    var j = neighbor(indexOf(state.lyricsFor), dir);
+    if (j >= 0) openLyrics(state.selected[j].song_id);
+  }
+
+  function closeLyrics() {
+    var panel = $("lyrics-panel");
+    if (!panel || !panel.classList.contains("open")) return;
+    var id = state.lyricsFor;
+    state.lyricsFor = null;
+    panel.classList.remove("open");
+    panel.setAttribute("aria-hidden", "true");
+    var i = indexOf(id);
+    var row = i >= 0 ? $("song-list").children[i] : null;
+    if (row) {
+      row.classList.remove("viewing");
+      var b = row.querySelector("[data-lyrics]");
+      if (b && !row.hidden) b.focus();
+    }
+  }
+
+  function onLyricsKey(e) {
+    if (!state.lyricsFor || e.metaKey || e.ctrlKey || e.altKey) return;
+    if (/^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName)) return;
+    if (e.key === "Escape") closeLyrics();
+    else if (e.key === "ArrowRight") stepLyrics(1);
+    else if (e.key === "ArrowLeft") stepLyrics(-1);
+    else if (/^[1-5]$/.test(e.key)) pick(state.lyricsFor, +e.key);
+    else return;
+    e.preventDefault();
   }
 
   async function saveClaudeFiles() {
@@ -947,6 +1065,11 @@
   $("mode-claude").addEventListener("click", function () { startScoring("claude"); });
 
   $("song-list").addEventListener("click", onPick);
+  $("lyr-pick").addEventListener("click", onPick);
+  $("lyr-close").addEventListener("click", closeLyrics);
+  $("lyr-prev").addEventListener("click", function () { stepLyrics(-1); });
+  $("lyr-next").addEventListener("click", function () { stepLyrics(1); });
+  document.addEventListener("keydown", onLyricsKey);
   $("search").addEventListener("input", function (e) { state.query = e.target.value.trim().toLowerCase(); updateProgress(); });
   $("view-filter").addEventListener("click", function (e) {
     var b = e.target.closest("button");

@@ -113,7 +113,7 @@
   }
 
   // ====================================================================
-  // Lyrics from chord charts (only for the optional file Claude reads)
+  // Lyrics from chord charts (for the lyrics panel and the file the AI reads)
   // ====================================================================
 
   var SECTION_RE = new RegExp(
@@ -158,7 +158,27 @@
     return kept.join("\n").trim();
   }
 
-  function bestLyrics(row) {
+  /** A chord chart as sections to show on screen: [{label, stanzas: [[line, ...], ...]}].
+      Chords are dropped; section names like "Chorus" become labels. */
+  function lyricSections(chart) {
+    var sections = [], cur = null, stanza = null;
+    function start(label) { cur = { label: label, stanzas: [] }; sections.push(cur); stanza = null; }
+    (chart || "").replace(/\r\n?/g, "\n").split("\n").forEach(function (line) {
+      var t = line.trim().replace(/:+$/, "");
+      if (!t) { stanza = null; return; }
+      if (t.length <= 40 && SECTION_RE.test(t)) { start(t); return; }
+      if (chordOnly(line)) return;
+      var text = line.replace(BRACKET_CHORD_RE, "").replace(/\s+/g, " ").trim();
+      if (!text) return;
+      if (!cur) start("");
+      if (!stanza) { stanza = []; cur.stanzas.push(stanza); }
+      stanza.push(text);
+    });
+    return sections.filter(function (sec) { return sec.stanzas.length; });
+  }
+
+  /** The first chord chart in an export row that has any words in it. */
+  function bestChart(row) {
     var numbers = [];
     Object.keys(row).forEach(function (k) {
       var m = /^arrangement (\d+) chord chart$/.exec(k.trim().toLowerCase());
@@ -166,10 +186,14 @@
     });
     numbers.sort(function (a, b) { return a - b; });
     for (var i = 0; i < numbers.length; i++) {
-      var lyr = lyricsFromChart(field(row, "Arrangement " + numbers[i] + " Chord Chart") || "");
-      if (lyr) return lyr;
+      var chart = field(row, "Arrangement " + numbers[i] + " Chord Chart") || "";
+      if (lyricsFromChart(chart)) return chart;
     }
     return "";
+  }
+
+  function bestLyrics(row) {
+    return lyricsFromChart(bestChart(row));
   }
 
   // ====================================================================
@@ -431,15 +455,19 @@
     }
   };
 
-  /** Lyrics from a song's first arrangement that has any. Only used for the file Claude reads. */
-  PlanningCenter.prototype.songLyrics = async function (songId) {
+  /** The lyrics (or chord chart) of a song's first arrangement that has any words. */
+  PlanningCenter.prototype.songChart = async function (songId) {
     var arrangements = await this.allPages("/songs/" + songId + "/arrangements");
     for (var i = 0; i < arrangements.length; i++) {
       var a = arrangements[i].attributes || {};
-      var lyr = lyricsFromChart(a.lyrics || "") || lyricsFromChart(a.chord_chart || "");
-      if (lyr) return lyr;
+      if (lyricsFromChart(a.lyrics || "")) return a.lyrics;
+      if (lyricsFromChart(a.chord_chart || "")) return a.chord_chart;
     }
     return "";
+  };
+
+  PlanningCenter.prototype.songLyrics = async function (songId) {
+    return lyricsFromChart(await this.songChart(songId));
   };
 
   PlanningCenter.prototype.tagsInGroup = async function (groupId) {
@@ -519,9 +547,13 @@
     return list;
   };
 
-  PretendPlanningCenter.prototype.songLyrics = async function (songId) {
+  PretendPlanningCenter.prototype.songChart = async function (songId) {
     var row = this.rows.find(function (r) { return rowId(r) === songId; });
-    return row ? bestLyrics(row) : "";
+    return row ? bestChart(row) : "";
+  };
+
+  PretendPlanningCenter.prototype.songLyrics = async function (songId) {
+    return lyricsFromChart(await this.songChart(songId));
   };
 
   PretendPlanningCenter.prototype.describe = function (songId) {
@@ -606,6 +638,11 @@
     }), scaleGroupName);
   }
 
+  /** One song's chord chart, for the lyrics panel. Export rows already have it. */
+  async function songChart(pc, song) {
+    return song.row ? bestChart(song.row) : pc.songChart(song.song_id);
+  }
+
   /** {song_id: lyrics} for the file Claude reads. Export rows already have them. */
   async function gatherLyrics(pc, songs, onProgress) {
     var out = {};
@@ -672,7 +709,7 @@
     API_BASE: API_BASE, DEFAULT_GROUP: DEFAULT_GROUP, SCORE_NAMES: SCORE_NAMES,
     UserError: UserError, decodeBytes: decodeBytes, readTable: readTable, field: field,
     normId: normId, rowId: rowId, songTagsOf: songTagsOf, lyricsFromChart: lyricsFromChart,
-    bestLyrics: bestLyrics, loadExport: loadExport, selectSongs: selectSongs, safeCell: safeCell,
+    bestLyrics: bestLyrics, lyricSections: lyricSections, songChart: songChart, loadExport: loadExport, selectSongs: selectSongs, safeCell: safeCell,
     scoringSheetCsv: scoringSheetCsv, songsForClaudeJson: songsForClaudeJson, logCsv: logCsv,
     checkSheet: checkSheet, PlanningCenter: PlanningCenter,
     PretendPlanningCenter: PretendPlanningCenter, resolveScale: resolveScale,

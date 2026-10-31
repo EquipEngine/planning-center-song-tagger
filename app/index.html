@@ -353,6 +353,24 @@
 
 </main>
 
+<aside id="lyrics-panel" class="drawer" aria-labelledby="lyr-title" aria-hidden="true">
+  <div class="drawer-head">
+    <div>
+      <h2 id="lyr-title" tabindex="-1"></h2>
+      <p id="lyr-meta" class="muted"></p>
+    </div>
+    <button type="button" class="drawer-close" id="lyr-close" aria-label="Close lyrics">×</button>
+  </div>
+  <div id="lyr-pick"></div>
+  <p class="lyr-tip"><b>Shortcuts:</b> <kbd>1</kbd>–<kbd>5</kbd> choose a rating <span>·</span> <kbd>←</kbd> <kbd>→</kbd> previous or next song <span>·</span> <kbd>Esc</kbd> close</p>
+  <div class="drawer-body" id="lyr-body"></div>
+  <div class="drawer-foot">
+    <button class="btn ghost small" type="button" id="lyr-prev">← Previous</button>
+    <span class="drawer-keys" id="lyr-pos"></span>
+    <button class="btn ghost small" type="button" id="lyr-next">Next →</button>
+  </div>
+</aside>
+
 <footer class="wrap foot">
   <span id="foot-text">Open source under the MIT License. This page runs entirely in your browser: no account, no server, no tracking.</span>
   <a href="../" target="_blank" rel="noopener noreferrer">About this tool</a>
