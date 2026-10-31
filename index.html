@@ -60,9 +60,14 @@
   .fine { font-size: 14px; color: var(--muted); margin-top: 14px; }
 
   /* hero */
-  .hero { padding: 84px 0 64px; }
+  .hero { padding: 84px 0 64px; position: relative; overflow: hidden; }
+  .hero > .wrap { position: relative; z-index: 1; }
+  .hero-field { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none;
+    -webkit-mask-image: radial-gradient(ellipse 85% 90% at 50% 45%, #000 40%, transparent 100%);
+            mask-image: radial-gradient(ellipse 85% 90% at 50% 45%, #000 40%, transparent 100%); }
   .hero-grid { display: grid; grid-template-columns: 1.15fr 1fr; gap: 56px; align-items: center; }
   .hero h1 { font-size: 46px; letter-spacing: -0.02em; margin-bottom: 18px; }
+  .hero h1 .hl { color: var(--s5); background: linear-gradient(90deg, var(--s1), var(--s5)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
   @media (max-width: 900px) { .hero-grid { grid-template-columns: 1fr; } .hero h1 { font-size: 36px; } }
 
   .scale-card { background: #fff; border: 1px solid var(--line); border-radius: var(--radius); padding: 22px; box-shadow: 0 10px 30px rgba(31,35,40,.06); }
@@ -164,6 +169,12 @@
   .verse p { margin: 12px 0 0; color: var(--muted); }
   .why-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; margin-top: 44px; }
   .why-cols p { color: var(--muted); }
+  .pull { margin: 18px 0; padding: 16px 20px; background: #fff; border-left: 4px solid var(--s1); border-radius: 0 10px 10px 0; }
+  .pull blockquote { margin: 0; font-family: Georgia, "Times New Roman", serif; font-size: 21px; font-style: italic; line-height: 1.4; color: var(--ink); }
+  .pull blockquote span { display: block; margin-top: 6px; }
+  .pull figcaption { margin-top: 8px; font-size: 13px; color: var(--muted); }
+  .pull figcaption a, .reading a { color: inherit; text-decoration: none; }
+  .pull figcaption a:hover, .reading a:hover { text-decoration: underline; }
   .flow { list-style: none; padding: 0; margin: 18px 0 0; counter-reset: f; }
   .flow li { display: grid; grid-template-columns: 22px 92px 1fr; gap: 10px; align-items: baseline; padding: 11px 0; border-top: 1px solid var(--line); color: var(--muted); font-size: 15px; }
   .flow li:first-child { border-top: none; }
@@ -206,10 +217,11 @@
 </nav>
 
 <header class="hero" id="top">
+  <canvas class="hero-field" id="hero-field" aria-hidden="true"></canvas>
   <div class="wrap hero-grid">
     <div>
       <div class="eyebrow">Free for churches using Planning Center</div>
-      <h1>See how your songs speak: about God, or to God.</h1>
+      <h1>Plan Song Flow with <span class="hl">Intention</span> Beyond Feel</h1>
       <p class="lead">Tag every worship song in Planning Center Services with a directional rating from <b>1</b> (sung about God, for the edification of the church) to <b>5</b> (sung to God). Each rating becomes a tag you can filter, report on, and use to plan services with both declaration and prayer.</p>
       <div class="btn-row">
         <a class="btn primary" data-repo="releases/latest/download/HV-Song-Tagger-Mac.dmg" href="#download-help">
@@ -266,7 +278,12 @@
       <div>
         <h3>Which should we choose? Both.</h3>
         <p>The right balance isn't always the middle. When the moment calls for ascribing glory to God, we lean vertical. When the body needs to be reminded of eternal truth, we lean horizontal.</p>
-        <p>Either way, singing together is never only personal. Scripture says we address one another as we sing to the Lord (Ephesians 5:19–21), and that everything we do when we gather is for edifying one another (1 Corinthians 14:26). Greg Gilbert of 9Marks applies this to singing: sing even the songs that aren't your favorites, and sing them wholeheartedly, because someone beside you may be deeply strengthened by them. That's true whether you're on a microphone, holding a guitar, or running slides from the back.</p>
+        <p>Either way, singing together is never only personal. Scripture says we address one another as we sing to the Lord (Ephesians 5:19–21), and that everything we do when we gather is for edifying one another (1 Corinthians 14:26). Pastor Greg Gilbert puts it plainly:</p>
+        <figure class="pull">
+          <blockquote>“Don't check out on songs that aren't your favorites; sing them! <span>… Worship isn't finally an individual experience; it's corporate.”</span></blockquote>
+          <figcaption>Greg Gilbert, <a href="https://web.archive.org/web/20110818161842/http://www.9marks.org/blog/singing-build">“Singing to Build Up”</a>, 9Marks (2011)</figcaption>
+        </figure>
+        <p>Someone beside you may be deeply strengthened by the very song you'd rather skip. That's true whether you're on a microphone, holding a guitar, or running slides from the back.</p>
       </div>
       <div>
         <h3>From revelation to response</h3>
@@ -293,7 +310,7 @@
     </div>
 
     <p class="closing">Planning tools have their limits. Whatever we do, in word or deed, we do in the name of the Lord Jesus, giving thanks to the Father through Him (Colossians 3:17). Good intentions and careful planning don't make our worship acceptable; as Harold Best reminds us, only God, seeing faithfully offered work as perfect in Christ, does that.</p>
-    <p class="reading">Further reading: Harold M. Best, <i>Unceasing Worship</i> · Greg Gilbert on congregational singing at 9Marks</p>
+    <p class="reading">Further reading: Harold M. Best, <i>Unceasing Worship</i> · Greg Gilbert, <a href="https://web.archive.org/web/20110818161842/http://www.9marks.org/blog/singing-build">“Singing to Build Up”</a> (9Marks, 2011)</p>
   </div>
 </section>
 
@@ -483,6 +500,118 @@
 </footer>
 
 <script>
+  /* Hero backdrop: a field of small arrows that lean into the way the pointer moves.
+     Arrows pointing across are gold (horizontal); arrows pointing up or down are blue (vertical).
+     It rests when nothing moves, and stays still for people who prefer reduced motion. */
+  (function () {
+    var canvas = document.getElementById("hero-field");
+    var hero = document.getElementById("top");
+    if (!canvas || !canvas.getContext) return;
+    var ctx = canvas.getContext("2d");
+    var still = window.matchMedia("(prefers-reduced-motion: reduce)");
+    var GAP = 30, REACH = 110, DECAY = 0.93, BOTH_ENDS = true;
+    var GOLD = [176, 122, 26], BLUE = [47, 93, 140];
+    var arrows = [], w = 0, h = 0, dpr = 1, frame = 0, visible = true;
+    var last = null;  // last pointer position and time
+
+    function layout() {
+      var r = hero.getBoundingClientRect();
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      w = r.width; h = r.height;
+      canvas.width = Math.round(w * dpr); canvas.height = Math.round(h * dpr);
+      arrows = [];
+      var cols = Math.ceil(w / GAP) + 1, rows = Math.ceil(h / GAP) + 1;
+      var ox = (w - (cols - 1) * GAP) / 2, oy = (h - (rows - 1) * GAP) / 2;
+      for (var j = 0; j < rows; j++) {
+        for (var i = 0; i < cols; i++) {
+          // At rest, alternate across (0) and up (-90°): the two directions of the scale.
+          arrows.push({ x: ox + i * GAP, y: oy + j * GAP, base: (i + j) % 2 ? -Math.PI / 2 : 0, fx: 0, fy: 0 });
+        }
+      }
+      draw();
+    }
+
+    function color(angle, alpha) {
+      var v = Math.abs(Math.sin(angle));  // 0 = across, 1 = up or down
+      var c = GOLD.map(function (g, k) { return Math.round(g + (BLUE[k] - g) * v); });
+      return "rgba(" + c[0] + "," + c[1] + "," + c[2] + "," + alpha.toFixed(3) + ")";
+    }
+
+    function draw() {
+      var energy = 0;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.clearRect(0, 0, w, h);
+      ctx.lineWidth = 1.3; ctx.lineCap = "round"; ctx.lineJoin = "round";
+      for (var n = 0; n < arrows.length; n++) {
+        var a = arrows[n];
+        var m = Math.min(1, Math.hypot(a.fx, a.fy) / 6);  // how strongly it's being pushed
+        energy += m;
+        var flow = Math.atan2(a.fy, a.fx);
+        // A two-headed arrow only needs to line up with the motion, so it turns at most 90°.
+        var d = BOTH_ENDS ? Math.atan2(Math.sin(2 * (flow - a.base)), Math.cos(2 * (flow - a.base))) / 2
+                          : Math.atan2(Math.sin(flow - a.base), Math.cos(flow - a.base));
+        var ang = a.base + d * m;
+        var len = 5 + 3 * m;
+        var cx = a.x + Math.cos(flow) * 4 * m, cy = a.y + Math.sin(flow) * 4 * m;
+        var dx = Math.cos(ang) * len, dy = Math.sin(ang) * len;
+        ctx.strokeStyle = color(ang, 0.07 + 0.13 * m);
+        ctx.beginPath();
+        ctx.moveTo(cx - dx, cy - dy); ctx.lineTo(cx + dx, cy + dy);
+        var hx = cx + dx, hy = cy + dy, k = 3 + 1.5 * m;
+        ctx.moveTo(hx - Math.cos(ang - 0.6) * k, hy - Math.sin(ang - 0.6) * k);
+        ctx.lineTo(hx, hy);
+        ctx.lineTo(hx - Math.cos(ang + 0.6) * k, hy - Math.sin(ang + 0.6) * k);
+        if (BOTH_ENDS) {
+          var tx = cx - dx, ty = cy - dy;
+          ctx.moveTo(tx + Math.cos(ang - 0.6) * k, ty + Math.sin(ang - 0.6) * k);
+          ctx.lineTo(tx, ty);
+          ctx.lineTo(tx + Math.cos(ang + 0.6) * k, ty + Math.sin(ang + 0.6) * k);
+        }
+        ctx.stroke();
+        a.fx *= DECAY; a.fy *= DECAY;
+      }
+      return energy;
+    }
+
+    function tick() {
+      frame = 0;
+      if (draw() > 0.05 && visible) frame = requestAnimationFrame(tick);
+    }
+
+    function onMove(e) {
+      if (still.matches || !visible) return;
+      var r = hero.getBoundingClientRect();
+      var x = e.clientX - r.left, y = e.clientY - r.top, t = performance.now();
+      if (last && t - last.t < 120) {
+        var vx = (x - last.x), vy = (y - last.y);
+        var speed = Math.hypot(vx, vy);
+        if (speed > 0.5) {
+          var push = Math.min(speed, 40) / speed;  // cap very fast flicks
+          for (var n = 0; n < arrows.length; n++) {
+            var a = arrows[n];
+            var dist2 = (a.x - x) * (a.x - x) + (a.y - y) * (a.y - y);
+            if (dist2 > REACH * REACH * 4) continue;
+            var f = Math.exp(-dist2 / (2 * REACH * REACH)) * 0.3;
+            a.fx += vx * push * f; a.fy += vy * push * f;
+          }
+          if (!frame) frame = requestAnimationFrame(tick);
+        }
+      }
+      last = { x: x, y: y, t: t };
+    }
+
+    layout();
+    var resizing = 0;
+    function relayout() { clearTimeout(resizing); resizing = setTimeout(layout, 120); }
+    if ("ResizeObserver" in window) new ResizeObserver(relayout).observe(hero);
+    else window.addEventListener("resize", relayout);
+    hero.addEventListener("pointermove", onMove, { passive: true });
+    hero.addEventListener("pointerleave", function () { last = null; });
+    if ("IntersectionObserver" in window) {
+      new IntersectionObserver(function (entries) { visible = entries[0].isIntersecting; }).observe(hero);
+    }
+  })();
+
   /* Links that point into the GitHub repo.
      On GitHub Pages (owner.github.io/repo) the repo is detected automatically.
      If you host this page anywhere else, set REPO below, e.g. "your-name/planning-center-song-tagger". */
