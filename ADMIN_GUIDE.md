@@ -37,10 +37,20 @@ Python is a free program the tool needs in order to run.
 **On a Mac:**
 
 1. Open the folder and double-click **Start Tagger (Mac).command**.
-2. If you see *"cannot be opened because it is from an unidentified developer"*:
-   1. Click **OK**.
-   2. Right-click (or Control-click) the file and choose **Open**.
-   3. Click **Open** again. You only have to do this once.
+2. The first time, your Mac warns you, because the tool isn't registered with
+   Apple (that costs a yearly fee). You only have to do this once:
+   1. When the box says Apple *"could not verify"* Start Tagger, click
+      **Done** (not Move to Trash).
+   2. Open the Apple menu, choose **System Settings**, then
+      **Privacy & Security**.
+   3. Scroll down to **Security**. Next to the message about Start Tagger,
+      click **Open Anyway**.
+   4. In the box that appears, click **Open Anyway** again, then enter your
+      Mac password or use Touch ID.
+
+   If you don't see **Open Anyway**, double-click Start Tagger again, then go
+   back to Privacy & Security. On macOS 14 or older, you can instead
+   Control-click the file, choose **Open**, and click **Open**.
 3. If a box asks to install **"command line developer tools,"** click **Install**.
    When it finishes, double-click Start Tagger again.
 4. If the window says Python is still missing, install it from

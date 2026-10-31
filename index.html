@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Horizontal–Vertical Song Tagger for Planning Center</title>
-<meta name="description" content="A free tool for churches: tag every worship song in Planning Center with a direction from 1 (sung about God) to 5 (sung to God), then plan and report on a balanced song list. Mac and Windows, no coding.">
+<meta name="description" content="A free app for churches: tag every worship song in Planning Center with a direction from 1 (sung about God) to 5 (sung to God), then plan and report on a balanced song list. Mac and Windows, no coding.">
 <meta property="og:title" content="Horizontal–Vertical Song Tagger for Planning Center">
 <meta property="og:description" content="Tag every worship song with a direction from 1 (sung about God) to 5 (sung to God). Free, Mac and Windows, no coding required.">
 <meta property="og:type" content="website">
@@ -119,6 +119,12 @@
   .res .icon { flex: none; margin: 0; }
   .res b { display: block; color: var(--ink); }
 
+  /* first open */
+  .first ol { margin: 12px 0 0; padding-left: 22px; }
+  .first ol li { padding: 5px 0; }
+  .first .aside { font-size: 14px; color: var(--muted); margin: 14px 0 0; }
+  .first .safe-note { margin-top: 24px; max-width: 820px; color: var(--muted); }
+
   /* faq */
   details { border-top: 1px solid var(--line); padding: 18px 0; }
   details:last-of-type { border-bottom: 1px solid var(--line); }
@@ -191,14 +197,18 @@
       <h1>See how your songs speak: about God, or to God.</h1>
       <p class="lead">Tag every worship song in Planning Center Services with a direction from <b>1</b> (sung about God, for the edification of the church) to <b>5</b> (sung to God). Each direction becomes a tag you can filter, report on, and use to plan services with both declaration and prayer.</p>
       <div class="btn-row">
-        <a class="btn primary" data-repo="archive/refs/heads/main.zip" href="#download-help">
+        <a class="btn primary" data-repo="releases/latest/download/HV-Song-Tagger-Mac.dmg" href="#download-help">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>
-          Download the tool
+          Download for Mac
         </a>
-        <a class="btn ghost" data-repo="blob/main/ADMIN_GUIDE.md" href="ADMIN_GUIDE.md">Read the step-by-step guide</a>
+        <a class="btn primary" data-repo="releases/latest/download/HV-Song-Tagger-Windows-Setup.exe" href="#download-help">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>
+          Download for Windows
+        </a>
       </div>
-      <p class="fine">Mac and Windows · No coding · Practice mode included · Open source (MIT)</p>
-      <p class="notice" id="download-help">To download, open this project's GitHub page, click the green <b>Code</b> button, and choose <b>Download ZIP</b>.</p>
+      <p class="fine">Free · Practice mode included · Open source (MIT)</p>
+      <p class="fine">Your computer will warn you the first time you open it. <a href="#first-open">Here's what to click.</a></p>
+      <p class="notice" id="download-help">The downloads are on this project's GitHub <b>Releases</b> page.</p>
     </div>
 
     <div class="scale-card" aria-label="The 1 to 5 scale">
@@ -275,69 +285,91 @@
 <section id="how">
   <div class="wrap">
     <div class="eyebrow">How it works</div>
-    <h2>Four steps, all from one simple menu.</h2>
-    <p class="lead">Double-click <b>Start Tagger</b>, pick a number, and follow the prompts. If you can fill in a spreadsheet, you can do this.</p>
+    <h2>Four steps, all in one window.</h2>
+    <p class="lead">Open <b>HV Song Tagger</b> and follow the steps across the top. Each step tells you what to do next.</p>
     <div class="grid-4">
-      <div class="card step"><div class="num">1</div><h3>Set up once</h3><p>Create five direction tags in Planning Center and connect the tool with a key. Its instructions walk you through it.</p><span class="time">About 30 min, once</span></div>
-      <div class="card step"><div class="num">2</div><h3>Make a tagging sheet</h3><p>Export your songs from Planning Center. The tool turns the export into a simple spreadsheet, for every song or just the lists you choose.</p><span class="time">5 min</span></div>
-      <div class="card step"><div class="num">3</div><h3>Tag each song</h3><p>Type a 1–5 next to each song using the one-page rubric, or let Claude suggest directions and review only the ones it's unsure about.</p><span class="time">30 min – 2 hrs</span></div>
-      <div class="card step"><div class="num">4</div><h3>Send to Planning Center</h3><p>The tool sends 3 songs first so you can check them, then sends the rest. Every other tag on each song is kept.</p><span class="time">About 10 min</span></div>
+      <div class="card step"><div class="num">1</div><h3>Connect</h3><p>Create a key in Planning Center and paste it in. The app finds your direction tags, or shows you how to make them.</p><span class="time">About 15 min, once</span></div>
+      <div class="card step"><div class="num">2</div><h3>Choose songs</h3><p>The app loads your songs straight from Planning Center. Tag them all, or just the lists you pick.</p><span class="time">1 min</span></div>
+      <div class="card step"><div class="num">3</div><h3>Tag each song</h3><p>Click a direction from 1 to 5 for each song, or let AI suggest directions and review only the ones it's unsure about.</p><span class="time">30 min – 2 hrs</span></div>
+      <div class="card step"><div class="num">4</div><h3>Send to Planning Center</h3><p>The app sends 3 songs first so you can check them, then sends the rest. Every other tag on each song is kept.</p><span class="time">About 5 min</span></div>
     </div>
   </div>
 </section>
 
-<section class="alt" id="paths">
+<section class="alt first" id="first-open">
+  <div class="wrap">
+    <div class="eyebrow">Opening it the first time</div>
+    <h2>Your computer will warn you once. Here's what to click.</h2>
+    <p class="lead">Apple and Microsoft warn you about any app that isn't registered with them, which costs a yearly fee. This free app isn't registered yet, so you'll see a warning the first time you open it. After that it opens normally.</p>
+    <div class="two-col">
+      <div class="card">
+        <h3>On a Mac</h3>
+        <ol>
+          <li>Open the downloaded file and drag <b>HV Song Tagger</b> into your <b>Applications</b> folder.</li>
+          <li>Double-click <b>HV Song Tagger</b> in Applications. A box says Apple <i>could not verify</i> it. Click <b>Done</b>, not Move to Trash.</li>
+          <li>Open the Apple menu, choose <b>System Settings</b>, then <b>Privacy &amp; Security</b>.</li>
+          <li>Scroll down to <b>Security</b>. Next to the message about HV Song Tagger, click <b>Open Anyway</b>.</li>
+          <li>In the box that appears, click <b>Open Anyway</b> again, then enter your Mac password or use Touch ID.</li>
+        </ol>
+        <p class="aside">If you don't see <b>Open Anyway</b>, double-click the app again, then go back to Privacy &amp; Security. On macOS 14 or older, you can instead Control-click the app, choose <b>Open</b>, and click <b>Open</b>.</p>
+      </div>
+      <div class="card">
+        <h3>On Windows</h3>
+        <ol>
+          <li>Double-click the downloaded <b>HV-Song-Tagger-Windows-Setup</b> file.</li>
+          <li>If a blue <i>Windows protected your PC</i> box appears, click <b>More info</b>, then <b>Run anyway</b>.</li>
+          <li>Follow the installer, then open <b>HV Song Tagger</b> from the Start menu.</li>
+        </ol>
+      </div>
+    </div>
+    <p class="safe-note"><b>Is it safe?</b> The warning means the app isn't registered with Apple or Microsoft. It doesn't mean anything was found wrong with it. Every line of the code is public on GitHub for anyone to read. Download it only from this page, not from a copy someone sends you.</p>
+  </div>
+</section>
+
+<section id="paths">
   <div class="wrap">
     <div class="eyebrow">Ways to tag</div>
-    <h2>Tag the songs yourself, or have Claude help.</h2>
-    <p class="lead">Every path uses the same rubric and the same tool to send directions to Planning Center. Choose the one that fits your team.</p>
-    <div class="grid-3">
+    <h2>Tag the songs yourself, or have AI help.</h2>
+    <p class="lead">Both ways use the same rubric, and the app sends the directions to Planning Center either way.</p>
+    <div class="two-col">
       <div class="card path">
         <span class="tag">No AI needed</span>
         <h3>Tag them yourself</h3>
-        <p>Open the tagging sheet in Excel, Numbers, or Google Sheets, keep the printed rubric next to you, and type a number for each song.</p>
-        <ul><li>Good for teams who want to talk through every song</li><li>Easy to split among several people</li></ul>
+        <p>Keep the printed rubric next to you and click a direction for each song in the app.</p>
+        <ul><li>Good for teams who want to talk through every song</li><li>Mark any song "Unsure" and come back to it</li></ul>
         <a class="btn ghost" href="docs/rubric-one-pager.pdf">Printable rubric (PDF)</a>
       </div>
       <div class="card path featured">
         <span class="tag">Fastest</span>
-        <h3>Claude suggests, you review</h3>
-        <p>Claude suggests a direction for every song and flags only the ones it's unsure about, plus a random spot-check of the rest.</p>
-        <ul><li>A 10-song calibration teaches Claude your church's calls</li><li>Works with regular Claude using a Project, with no extra setup beyond copy and paste</li></ul>
-        <a class="btn primary" data-repo="blob/main/CLAUDE_PROJECT_SETUP.md" href="CLAUDE_PROJECT_SETUP.md">Set up a Claude Project</a>
-      </div>
-      <div class="card path">
-        <span class="tag">For Cowork users</span>
-        <h3>Claude Cowork skill</h3>
-        <p>Install the skill and ask Claude to "suggest directions for my tagging sheet." It reads the files directly and fills in the sheet for you.</p>
-        <ul><li>Remembers your house rules between sessions</li><li>Walks the admin through each menu step</li></ul>
-        <a class="btn ghost" href="skill/horizontal-vertical-tagging.skill">Download the skill</a>
+        <h3>AI suggests, you review</h3>
+        <p>The app saves two files and gives you a prompt to copy. Give both to Claude, ChatGPT, or Gemini, then bring the finished sheet back into the app.</p>
+        <ul><li>The AI flags the songs it's unsure about for you to review</li><li>You check every direction before anything is sent</li></ul>
       </div>
     </div>
   </div>
 </section>
 
-<section id="safety">
+<section class="alt" id="safety">
   <div class="wrap">
     <div class="eyebrow">Built to be safe</div>
     <h2>Your library stays intact.</h2>
     <div class="two-col">
       <div class="card">
-        <h3>What the tool does</h3>
+        <h3>What the app does</h3>
         <ul class="check">
           <li>Changes <b>only</b> the 1–5 direction tag on each song. Lists, themes, seasons, and every other tag are kept.</li>
           <li>Sends <b>3 songs first</b> and waits until you've checked them in Planning Center.</li>
           <li>Is <b>safe to run again</b>: songs that already have the right direction are skipped.</li>
-          <li>Keeps a <b>record of every song</b> it sends in a log file.</li>
+          <li>Lets you save a <b>record of every song</b> it sends.</li>
           <li>Includes a <b>practice mode</b> with made-up songs that changes nothing.</li>
         </ul>
       </div>
       <div class="card">
         <h3>What stays with you</h3>
         <ul class="check">
-          <li>Your Planning Center key is saved <b>only on your computer</b>, and you can turn it off anytime in Planning Center.</li>
-          <li>Song exports and lyrics stay on your computer and are never included in the project files.</li>
-          <li>Claude reads lyrics only to choose a direction and is instructed never to reproduce them.</li>
+          <li>Your Planning Center key goes <b>only to Planning Center</b>. If you ask the app to remember it, it's kept in your computer's password storage.</li>
+          <li>Lyrics come straight from your Planning Center account and stay on your computer, unless you choose to give them to an AI.</li>
+          <li>The AI prompt asks it to use lyrics only to choose a direction, and never to repeat them.</li>
           <li>The code is open source, so anyone can read exactly what it does.</li>
         </ul>
       </div>
@@ -345,48 +377,45 @@
   </div>
 </section>
 
-<section class="alt" id="needs">
+<section id="needs">
   <div class="wrap">
     <div class="eyebrow">What you'll need</div>
     <h2>Probably everything you already have.</h2>
-    <div class="grid-4">
+    <div class="grid-3">
       <div class="card"><div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg></div><h3>A Planning Center login</h3><p>One that can edit songs in Services.</p></div>
-      <div class="card"><div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></svg></div><h3>A Mac or Windows PC</h3><p>Plus Python, a free program. The guide shows how to install it.</p></div>
-      <div class="card"><div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18"/></svg></div><h3>A spreadsheet app</h3><p>Excel, Numbers, or Google Sheets.</p></div>
-      <div class="card"><div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l2.5 5.5L20 9l-4 4 1 6-5-3-5 3 1-6-4-4 5.5-.5z"/></svg></div><h3>Claude (optional)</h3><p>Only if you want Claude to suggest directions.</p></div>
+      <div class="card"><div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></svg></div><h3>A Mac or Windows PC</h3><p>Nothing else to install.</p></div>
+      <div class="card"><div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l2.5 5.5L20 9l-4 4 1 6-5-3-5 3 1-6-4-4 5.5-.5z"/></svg></div><h3>An AI account (optional)</h3><p>Claude, ChatGPT, or Gemini, only if you want AI to suggest directions.</p></div>
     </div>
   </div>
 </section>
 
-<section id="resources">
+<section class="alt" id="resources">
   <div class="wrap">
     <div class="eyebrow">Resources</div>
     <h2>Everything in one place.</h2>
     <div class="grid-3">
-      <a class="card res" data-repo="blob/main/ADMIN_GUIDE.md" href="ADMIN_GUIDE.md"><div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h11l5 5v11H4z"/><path d="M15 4v5h5M8 13h8M8 17h6"/></svg></div><div><b>Admin Guide</b><p>Step-by-step, plain-language instructions with troubleshooting.</p></div></a>
       <a class="card res" href="docs/rubric-one-pager.pdf"><div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V3h12v6"/><rect x="3" y="9" width="18" height="8" rx="2"/><path d="M7 14h10v7H7z"/></svg></div><div><b>Printable rubric</b><p>One page explaining how to choose each song's direction.</p></div></a>
       <a class="card res" data-repo="blob/main/RUBRIC.md" href="RUBRIC.md"><div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3 8-8"/><path d="M20 12v7a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h9"/></svg></div><div><b>Full rubric</b><p>Edge cases, tagging as a team, and strict vs. loose tagging.</p></div></a>
-      <a class="card res" data-repo="blob/main/CLAUDE_PROJECT_SETUP.md" href="CLAUDE_PROJECT_SETUP.md"><div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div><div><b>Claude Project setup</b><p>Copy-paste instructions so regular Claude can suggest directions.</p></div></a>
-      <a class="card res" data-repo="tree/main/examples" href="examples/"><div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.8-3.8a6 6 0 0 1-7.9 7.9l-6.9 6.9a2.1 2.1 0 0 1-3-3l6.9-6.9a6 6 0 0 1 7.9-7.9z"/></svg></div><div><b>Examples</b><p>Made-up sample songs and a filled-in sheet for practice.</p></div></a>
-      <a class="card res" data-repo="blob/main/TECHNICAL.md" href="TECHNICAL.md"><div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m16 18 6-6-6-6M8 6l-6 6 6 6"/></svg></div><div><b>Technical reference</b><p>Commands, file formats, and how the Planning Center API is used.</p></div></a>
+      <a class="card res" data-repo="" href="#"><div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m16 18 6-6-6-6M8 6l-6 6 6 6"/></svg></div><div><b>Code and docs on GitHub</b><p>Read exactly what the app does, or report a problem.</p></div></a>
     </div>
   </div>
 </section>
 
-<section class="alt" id="faq">
+<section id="faq">
   <div class="wrap">
     <div class="eyebrow">Questions</div>
     <h2>Frequently asked</h2>
     <div class="faq-wrap">
       <details><summary>Is a vertical song better than a horizontal one?</summary><p>No. Both directions are biblical, and healthy corporate worship needs both. A direction describes how a song speaks, not its quality or its worth. A church may lean one way for a season, and that's fine. The point is to choose on purpose.</p></details>
-      <details><summary>Do I need to know how to code?</summary><p>No. You double-click a file, choose numbers from a menu, and fill in a spreadsheet. The Admin Guide is written for office admins and volunteers, and covers installing Python (a free program the tool needs) on Mac and Windows.</p></details>
-      <details><summary>Will it change anything else in Planning Center?</summary><p>No. It changes only the 1–5 direction tag on each song and keeps every other tag. It also sends 3 songs first so you can check them before it does the rest.</p></details>
-      <details><summary>Do I need Claude or any other AI?</summary><p>No. You can tag every song yourself with the printed rubric. Claude is optional and makes the job faster: it suggests a direction for every song and flags only the songs it's unsure about for you to review.</p></details>
-      <details><summary>What does it cost?</summary><p>The tool is free and open source. You need a Planning Center Services account that can edit songs. If you choose to use Claude, the usual Claude plan applies.</p></details>
-      <details><summary>What happens to our song lyrics?</summary><p>Lyrics come from your own Planning Center export and stay on your computer. They're shared with Claude only if you choose that route, and Claude is instructed to use them only to choose a direction, never to reproduce them. The project files never include any lyrics.</p></details>
+      <details><summary>Do I need to know how to code?</summary><p>No. You download the app, paste in a key from Planning Center, and click a direction for each song. There's nothing else to install.</p></details>
+      <details><summary>Will it change anything else in Planning Center?</summary><p>No. The app changes only the 1–5 direction tag on each song and keeps every other tag. It also sends 3 songs first so you can check them before it does the rest.</p></details>
+      <details><summary>Do I need Claude or any other AI?</summary><p>No. You can tag every song yourself with the printed rubric. AI is optional and makes the job faster: Claude, ChatGPT, or Gemini suggests a direction for every song and flags only the songs it's unsure about for you to review.</p></details>
+      <details><summary>Why does my computer warn me about it?</summary><p>Apple and Microsoft show a warning for programs that aren't registered with them, which costs a yearly fee. This free app isn't registered yet. <a href="#first-open">Here's how to open it anyway</a>, which you only have to do once.</p></details>
+      <details><summary>What does it cost?</summary><p>The app is free and open source. You need a Planning Center Services account that can edit songs. If you choose to use AI, your usual plan for it applies.</p></details>
+      <details><summary>What happens to our song lyrics?</summary><p>The app reads lyrics from your own Planning Center account, and they stay on your computer. They're shared with an AI only if you choose that route, and the prompt asks it to use them only to choose a direction, never to repeat them.</p></details>
       <details><summary>Can we use different labels or a different scale?</summary><p>Yes. Planning Center's tag names can say anything as long as each starts with its number, 1 through 5. You can also adapt the rubric to your context. Just make sure everyone on your team uses the same one.</p></details>
-      <details><summary>What about songs we add later?</summary><p>Export again and choose to leave out songs that are already tagged. Your new tagging sheet will include only the new songs.</p></details>
-      <details><summary>Is this made by Planning Center?</summary><p>No. It's an independent tool built by a church worship team and shared for others to use. It uses Planning Center's official API.</p></details>
+      <details><summary>What about songs we add later?</summary><p>Open the app again and leave out songs that already have a direction. Only the new songs will be on your list.</p></details>
+      <details><summary>Is this made by Planning Center?</summary><p>No. It's an independent app built by a church worship team and shared for others to use. It uses Planning Center's official API.</p></details>
     </div>
   </div>
 </section>
@@ -396,7 +425,8 @@
     <h2>Ready to try it?</h2>
     <p class="lead">Start with the practice mode. It runs the whole process with made-up songs and changes nothing in Planning Center.</p>
     <div class="btn-row">
-      <a class="btn primary" data-repo="archive/refs/heads/main.zip" href="#download-help">Download the tool</a>
+      <a class="btn primary" data-repo="releases/latest/download/HV-Song-Tagger-Mac.dmg" href="#download-help">Download for Mac</a>
+      <a class="btn primary" data-repo="releases/latest/download/HV-Song-Tagger-Windows-Setup.exe" href="#download-help">Download for Windows</a>
       <a class="btn ghost" data-repo="issues" href="#">Questions or ideas?</a>
     </div>
   </div>
@@ -429,7 +459,7 @@
       // Viewed locally or not yet configured: show download help instead of a broken link.
       links.forEach(function (a) {
         var p = a.getAttribute("data-repo");
-        if (p.indexOf("archive/") === 0) {
+        if (p.indexOf("releases/") === 0) {
           a.addEventListener("click", function () { document.getElementById("download-help").style.display = "block"; });
         } else if (p === "" || p === "issues") {
           a.removeAttribute("href"); a.style.opacity = ".6"; a.title = "Set REPO in index.html to enable this link";

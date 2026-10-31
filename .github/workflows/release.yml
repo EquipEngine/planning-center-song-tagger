@@ -1,0 +1,52 @@
+# Builds the desktop app for Mac and Windows and attaches it to a GitHub release.
+# Run it by pushing a version tag:  git tag v0.1.0 && git push origin v0.1.0
+# The landing page links to the fixed file names below, from the latest release.
+name: Release desktop app
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: macos-latest
+            args: --target universal-apple-darwin --bundles dmg
+            built: desktop/src-tauri/target/universal-apple-darwin/release/bundle/dmg/*.dmg
+            asset: HV-Song-Tagger-Mac.dmg
+          - os: windows-latest
+            args: --bundles nsis
+            built: desktop/src-tauri/target/release/bundle/nsis/*-setup.exe
+            asset: HV-Song-Tagger-Windows-Setup.exe
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Add the Intel Mac target
+        if: runner.os == 'macOS'
+        run: rustup target add aarch64-apple-darwin x86_64-apple-darwin
+      - name: Build
+        working-directory: desktop
+        run: |
+          npm ci
+          npx tauri build ${{ matrix.args }}
+      - name: Attach to the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          cp ${{ matrix.built }} "${{ matrix.asset }}"
+          gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1 ||
+            gh release create "$GITHUB_REF_NAME" --title "HV Song Tagger $GITHUB_REF_NAME" \
+              --notes "Download the file for your computer. The first time you open it, your computer will warn you because the app isn't registered with Apple or Microsoft. See https://3cordguy.github.io/planning-center-hv-tagger/#first-open for what to click." || true
+          gh release upload "$GITHUB_REF_NAME" "${{ matrix.asset }}" --clobber
