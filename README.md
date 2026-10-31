@@ -77,6 +77,9 @@ Open the app and follow the four steps across the top:
 4. **Send.** The app sends 3 songs first so you can check them in Planning
    Center, then sends the rest.
 
+For a full walkthrough with troubleshooting, see the
+**[Admin Guide](ADMIN_GUIDE.md)**.
+
 **Practice first.** On the first screen, choose **Practice with sample songs**.
 It runs the whole process with made-up songs and a pretend Planning Center.
 Nothing real changes.

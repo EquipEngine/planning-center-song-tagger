@@ -1,87 +1,109 @@
 # Admin Guide: Tagging Your Songs in Planning Center
 
-This guide walks you through every step. You don't need any technical
-background. If you can download a file, copy and paste, and fill in a
-spreadsheet, you can do this.
+This guide walks you through every step with the **HV Song Tagger** app. You
+don't need any technical background. If you can download an app and copy and
+paste, you can do this.
 
 **How long it takes**
 
-- One-time setup: about 30 minutes
-- Tagging: about 1 to 2 hours for 150–200 songs. You can split it across several sittings.
-- Sending the directions to Planning Center: about 10 minutes
+- One-time setup: about 15 minutes
+- Tagging: about 1 to 2 hours for 150–200 songs. You can split it across
+  several sittings.
+- Sending the directional ratings to Planning Center: about 5 minutes
 
 **What you need**
 
-- A computer (Mac or Windows)
+- A Mac or a Windows 10 or 11 PC
 - A Planning Center login that can **edit songs** in Services. If you're not
   sure you have this, ask whoever manages Planning Center at your church.
-- Excel, Numbers, or Google Sheets
+- Claude, ChatGPT, or Gemini, only if you want AI to suggest ratings
 
 ---
 
 ## Part 1: One-time setup
 
-### Step 1: Download the tool
+### Step 1: Download and open the app
 
-1. Go to the project's page on GitHub.
-2. Click the green **Code** button, then **Download ZIP**.
-3. Open your Downloads folder and double-click the ZIP file to unzip it.
-4. Move the unzipped folder somewhere easy to find, such as your **Documents** folder.
-
-Keep everything in this folder together. The tool saves your files here.
-
-### Step 2: Make sure Python is installed
-
-Python is a free program the tool needs in order to run.
+1. Download the file for your computer:
+   - **Mac:** [HV-Song-Tagger-Mac.dmg](https://github.com/3CordGuy/planning-center-hv-tagger/releases/latest/download/HV-Song-Tagger-Mac.dmg)
+   - **Windows:** [HV-Song-Tagger-Windows-Setup.exe](https://github.com/3CordGuy/planning-center-hv-tagger/releases/latest/download/HV-Song-Tagger-Windows-Setup.exe)
+2. Open it. The first time, your computer warns you, because the app isn't
+   registered with Apple or Microsoft (that costs a yearly fee). You only have
+   to do this once.
 
 **On a Mac:**
 
-1. Open the folder and double-click **Start Tagger (Mac).command**.
-2. The first time, your Mac warns you, because the tool isn't registered with
-   Apple (that costs a yearly fee). You only have to do this once:
-   1. When the box says Apple *"could not verify"* Start Tagger, click
-      **Done** (not Move to Trash).
-   2. Open the Apple menu, choose **System Settings**, then
-      **Privacy & Security**.
-   3. Scroll down to **Security**. Next to the message about Start Tagger,
-      click **Open Anyway**.
-   4. In the box that appears, click **Open Anyway** again, then enter your
-      Mac password or use Touch ID.
+1. Open the downloaded file and drag **HV Song Tagger** into your
+   **Applications** folder.
+2. Double-click **HV Song Tagger** in Applications. A box says Apple *could
+   not verify* it. Click **Done**, not Move to Trash.
+3. Open the Apple menu, choose **System Settings**, then **Privacy & Security**.
+4. Scroll down to **Security**. Next to the message about HV Song Tagger, click
+   **Open Anyway**.
+5. In the box that appears, click **Open Anyway** again, then enter your Mac
+   password or use Touch ID.
 
-   If you don't see **Open Anyway**, double-click Start Tagger again, then go
-   back to Privacy & Security. On macOS 14 or older, you can instead
-   Control-click the file, choose **Open**, and click **Open**.
-3. If a box asks to install **"command line developer tools,"** click **Install**.
-   When it finishes, double-click Start Tagger again.
-4. If the window says Python is still missing, install it from
-   [python.org/downloads](https://www.python.org/downloads/) and try again.
+If you don't see **Open Anyway**, double-click the app again, then go back to
+Privacy & Security. On macOS 14 or older, you can instead Control-click the
+app, choose **Open**, and click **Open**.
 
 **On Windows:**
 
-1. Open the folder and double-click **Start Tagger (Windows).bat**.
-2. If you see a blue *"Windows protected your PC"* box, click **More info**, then **Run anyway**.
-3. If the window says Python isn't installed:
-   1. Go to [python.org/downloads](https://www.python.org/downloads/) and download it.
-   2. When the installer opens, **check the box "Add python.exe to PATH"** at the bottom. This is important.
-   3. Click **Install Now**.
-   4. Double-click Start Tagger again.
+1. Double-click the downloaded **HV-Song-Tagger-Windows-Setup** file.
+2. If a blue *Windows protected your PC* box appears, click **More info**, then
+   **Run anyway**.
+3. Follow the installer, then open **HV Song Tagger** from the Start menu.
 
-When everything is working, a window opens with a menu of numbered choices.
+> **Tip:** On the first screen, choose **Practice with sample songs**. It runs
+> the whole process with made-up songs and a pretend Planning Center, and
+> nothing real changes. It's the best way to see what's ahead.
 
-> **Tip:** Try menu option **5, "Practice with sample songs,"** now. It walks
-> through the whole process using made-up songs, and nothing real changes.
-> It's the best way to see what's ahead.
+### Step 2: Connect the app to Planning Center
 
-### Step 3: Create the direction tags in Planning Center
+The app needs a key, called a **Personal Access Token**, so it can read your
+songs and update their tags. The key is two codes: a **Client ID** and a
+**Secret**.
 
-The directions are saved as tags in a new tag group. You create this group once,
-by hand, in Planning Center.
+1. In the app, click the **Planning Center developer page** link, or open
+   `https://api.planningcenteronline.com/personal_access_tokens` in your
+   browser, and sign in.
+2. Under **Personal Access Tokens**, create a new one. Name it something like
+   "Song tagging."
+3. Copy the **Client ID** and paste it into the app. Do the same with the
+   **Secret**. The Secret is shown only once, so keep that page open until
+   you've connected.
+4. Leave **Remember this key on this computer** ticked if you'd like the app to
+   reconnect by itself next time. Untick it if others use this computer.
+5. Click **Connect**.
 
-1. Sign in to Planning Center and open **Services**.
-2. Go to **Songs**, click **Actions**, then **Edit Tags**. Stay on the **Song** tab.
+> **About the key:** treat it like a password. The key can do anything *you*
+> can do in Planning Center, not just edit songs. Depending on your access,
+> that can include People records (members' addresses and phone numbers) and
+> Giving.
+>
+> The app sends it only to Planning Center. If you ask it to remember the key,
+> it's kept in your Mac's Keychain or Windows Credential Manager, which are
+> locked with your computer password.
+>
+> When you're done tagging for good, delete the key on the same Planning
+> Center page where you created it, and click **Forget saved key** at the top
+> of the app. You can make a new key in a minute the next time you have songs
+> to tag.
+
+### Step 3: Create the directional rating tags in Planning Center
+
+When you connect, the app looks for a tag group with five tags numbered 1 to 5.
+If it finds one, it says so and you can skip this step. If not, it shows these
+same steps with a short video.
+
+1. In Planning Center, open **Services**, then **Songs**.
+2. Click **Actions**, then **Edit Tags**. Stay on the **Song** tab.
+
+   ![Opening Songs, then Actions, then Edit Tags in Planning Center Services](app/media/find-tags.gif)
+
 3. Click **Add Tag Group** and name it **Horizontal Vertical Scale**. Leave
-   **Allow multiple selections** off, since each song gets one direction.
-4. Turn on **Required** if you want Planning Center to require a direction on every
+   **Allow multiple selections** off, since each song gets one rating.
+4. Turn on **Required** if you want Planning Center to require a rating on every
    song. This is optional. You can leave it off until your tagging is finished.
    Then click **Save**.
 5. Add these five tags to the group, typed exactly like this:
@@ -94,153 +116,97 @@ by hand, in Planning Center.
    Each tag name has to **start with its number**. You can change the words
    after the number if you like.
 
-### Step 4: Connect the tool to Planning Center
+[Watch a short video of steps 3 to 5](app/media/create-tag-group.mp4).
 
-The tool needs a key, called a **Personal Access Token**, so it can update
-your songs. The key is two codes: a **Client ID** and a **Secret**.
-
-1. Double-click **Start Tagger** and choose **1, "Set up."**
-2. The window shows a web address. Open it in your browser:
-   `https://api.planningcenteronline.com/personal_access_tokens`
-3. Sign in, find **Personal Access Tokens**, and create a new one.
-   Name it something like "Song tagging."
-4. Copy the **Client ID**, paste it into the tagger window, and press Enter.
-   - Mac: press Command-V to paste.
-   - Windows: right-click inside the window to paste.
-5. Copy the **Secret** and paste it the same way. **Nothing will appear on screen
-   as you paste.** That's normal and keeps the Secret private. Press Enter.
-6. The tool tests the connection and finds your direction tags.
-   When it says **"Setup is complete,"** you're done with setup for good.
-
-> **About the key:** treat it like a password. The key can do anything *you*
-> can do in Planning Center, not just edit songs. Depending on your access,
-> that can include People records (members' addresses and phone numbers) and
-> Giving. It's saved only in a file named `config.env` inside the tool's
-> folder. Don't email that file to anyone, and don't keep the tool's folder
-> in a shared drive (Dropbox, Google Drive, OneDrive, or a shared iCloud
-> folder).
->
-> When you finish tagging, delete the key on the same Planning Center page
-> where you created it. You can make a new one in a minute the next time you
-> have songs to tag.
+6. Back in the app, click **I've added them. Check again**.
 
 ---
 
 ## Part 2: Tagging your songs
 
-### Step 5: Export your songs and make a tagging sheet
+### Step 4: Choose the songs
 
-1. In Planning Center **Services**, go to **Songs**.
-2. Use the export option and choose **CSV**. Save the file to your
-   **Downloads** folder.
-3. Double-click **Start Tagger** and choose **2, "Make a tagging sheet."**
-4. The tool looks for your export in Downloads and asks *"Use this file?"*.
-   Type `yes`.
-   - If it can't find the file, drag the file from Finder or File Explorer
-     into the window and press Enter.
-5. Choose **which songs** to tag. The tool lists your song tags with numbers
-   next to them:
-   - Type `0` for all songs.
-   - Or type the numbers of the lists you want, such as `1,2` for "List: A"
-     and "List: B."
-6. If some songs already have a direction, the tool asks whether to leave them
-   out. Type `yes` if you only want to tag new songs.
+The app loads your songs straight from Planning Center. There's nothing to
+export.
 
-The tool creates a file named **scoring_sheet.csv** in its folder.
+1. Under **Which songs?**, pick **All songs**, or tick just the lists you want,
+   such as "List: A."
+2. Leave **Leave out songs that already have a directional rating** ticked if
+   you only want to tag new songs.
+3. Under **Next: how do you want to tag them?**, choose one of the two options
+   in Step 5.
 
-### Step 6: Fill in the directions
+If you change songs in Planning Center while the app is open, click **Refresh
+song list**. Any ratings you've already chosen are kept.
 
-**Option A: Tag the songs yourself**
+### Step 5: Choose each song's directional rating
 
-1. Print **docs/rubric-one-pager.pdf** and keep it next to you.
-2. Open **scoring_sheet.csv** in Excel, Numbers, or Google Sheets.
-3. For each song, type its direction, **1, 2, 3, 4, or 5**, in the **score** column.
-4. The **notes** column is optional. A few words about why you chose a direction
-   helps if someone else reviews your work.
-5. Don't change the `song_id` column, and don't rename or delete any columns.
-6. **Save as CSV:**
+Print [docs/rubric-one-pager.pdf](docs/rubric-one-pager.pdf) and keep it next
+to you. The app also has a **Quick rubric** you can open above the song list.
 
-   | Program | How to save |
-   |---|---|
-   | Excel | **File > Save As**, then choose **CSV UTF-8**. If Excel asks about keeping the format, choose to keep CSV. |
-   | Numbers | **File > Export To > CSV**. Save it into the tool's folder as `scoring_sheet.csv`. |
-   | Google Sheets | **File > Import** the CSV. When you're done, **File > Download > Comma-separated values**. Move the downloaded file into the tool's folder or leave it in Downloads. The tool looks in both places. |
+**Option A: Tag them yourself**
+
+1. Choose **Tag them myself**.
+2. For each song, click its rating: **1, 2, 3, 4, or 5**.
+3. Not sure about a song? Click **Unsure** and come back to it. The **Unsure**
+   button above the list shows only those songs.
 
 **Some songs have no lyrics in Planning Center.** These are often older hymns.
-Choose their direction from what you know of the song.
+Choose their rating from what you know of the song.
 
-**Option B: Let Claude do the tagging**
+**Option B: Have AI suggest the ratings**
 
-Claude can choose the direction for every song using the rubric. It flags only the songs it's
-unsure about, and you review those. There are two ways to set this up.
-Pick whichever matches how your church uses Claude.
+The AI reads each song's lyrics, suggests a rating, and marks the songs it's
+unsure about. You check those, and you see every rating before anything is
+sent.
 
-- **You use Claude in Cowork:**
-  1. Install the skill in the **skill** folder
-     (`horizontal-vertical-tagging.skill`).
-  2. Give Claude access to this tool's folder.
-  3. Ask: *"Tag the songs in my tagging sheet."*
-- **You use regular Claude (web or desktop app):** follow
-  **[CLAUDE_PROJECT_SETUP.md](CLAUDE_PROJECT_SETUP.md)**. You'll set up a
-  Claude Project once, then upload two files each time you tag songs.
+1. Choose **Have AI suggest directional ratings**.
+2. Click **Save the 2 files**. One is the sheet the AI fills in. The other has
+   the lyrics for it to read.
+3. Pick the assistant you use (**Claude**, **ChatGPT**, **Gemini**, or
+   **Other**) and follow the short steps the app shows.
+4. Click **Copy prompt**, paste it into a new chat, and attach both files.
+5. When the AI gives you the finished sheet, download it and click **Import the
+   sheet file** in the app. If it gave you text instead of a file, open **Got
+   text instead of a file?** and paste it there.
+6. Check the songs marked **Unsure**, and change any rating you disagree with.
 
-Either way, the steps are the same:
-
-1. **First time only: calibration (about 10 minutes).** Claude picks
-   10 songs. Your worship leader tags them, then Claude compares their
-   directions with its own. Where you disagree, Claude learns your church's
-   "house rules" and uses them from then on.
-2. **Claude tags the whole list.** It rates its confidence in each direction
-   as *high* or *low*.
-3. **You review only the low-confidence songs,** plus 5 random songs as a
-   spot-check. If you'd rather, you can ask to review every song.
-4. **Claude fills in the sheet.** It writes each song's direction, confidence, and
-   notes into the sheet. Any song still marked `low` is flagged by the Check step.
-
-The lyrics file (`songs_for_claude.json`) is for this purpose only. It
-contains copyrighted lyrics, so keep it private.
-
-### Step 7: Check your sheet
-
-1. Double-click **Start Tagger** and choose **3, "Check my tagging sheet."**
-2. The tool lists any songs that are missing a direction or have a typo, such as
-   "6" or "4.5". It also lists any songs still marked `low` in the
-   **confidence** column. After someone has looked at a flagged song,
-   change its `low` to `reviewed`.
-3. Fix those in your spreadsheet, save as CSV again, and run the check again.
-
-When the tool says **"Everything looks good,"** you're ready to send.
+The lyrics file is for this purpose only. Song lyrics are copyrighted, so use
+your own AI account and don't share the chat.
 
 ---
 
-## Part 3: Sending the directions to Planning Center
+## Part 3: Sending the ratings to Planning Center
 
-### Step 8: Send a test batch, then the rest
+### Step 6: Send a test batch, then the rest
 
-1. Double-click **Start Tagger** and choose **4, "Send directions to Planning Center."**
-2. The tool sends **just 3 songs first** and shows their names.
+1. Click **Review and send**. The app shows how many songs landed at each
+   rating. Songs still marked **Unsure** are left out unless you tick the box
+   to include them.
+2. Click **Send 3 test songs**. The app sends just 3 songs and lists them.
 3. Open Planning Center in your browser, go to **Services > Songs**, and look
    at those 3 songs. Check two things:
-   - Each song shows the right direction tag.
+   - Each song shows the right directional rating tag.
    - Each song **still has its other tags**, such as its list or theme tags.
-4. Back in the tagger window, type `yes` to send the rest.
-   The tool shows progress, one line per song.
+4. Back in the app, click **They look right. Send the rest**. If anything looked
+   wrong, click **Something's wrong. Stop here**. Only those 3 songs were
+   changed, and you can fix them by hand in Planning Center.
 
-If anything looked wrong in step 3, type `no`. Only those 3 songs were
-changed, and you can fix them by hand in Planning Center.
+### Step 7: You're done
 
-### Step 9: You're done
-
-Every song the tool sent is recorded in a file in the **logs** folder.
+Click **Save a record of what was sent** if you'd like a list of every song the
+app changed. The app then shows how to use your ratings in Planning Center:
+planning a service with them, filtering songs by rating, and where each song's
+rating appears.
 
 ---
 
 ## Later: when you add new songs
 
-1. Export your songs again (Step 5).
-2. When the tool asks whether to leave out songs that already have a direction,
-   type `yes`. The sheet will only include new songs.
-3. Tag them (Step 6), check (Step 7), and send (Step 8).
+1. Open the app. If it remembered your key, it reconnects by itself.
+2. Leave **Leave out songs that already have a directional rating** ticked. Only
+   the new songs will be on your list.
+3. Tag them (Step 5) and send (Step 6).
 
 ---
 
@@ -248,18 +214,17 @@ Every song the tool sent is recorded in a file in the **logs** folder.
 
 | What you see | What to do |
 |---|---|
-| "Planning Center did not accept your key" | Choose **1, Set up**, type `yes` to enter a new key, and paste both codes again. Make sure you copied the whole code. |
-| "doesn't have permission" | Your Planning Center login can't edit songs. Ask your Planning Center administrator for access, or have someone with access create the key. |
-| "couldn't find a tag group named ..." | Check that the group is spelled **Horizontal Vertical Scale** in Planning Center (Step 3), then choose **1, Set up** again. |
-| "needs 5 tags whose names start with the numbers 1 through 5" | One of the tags is missing or doesn't start with its number. Fix the tag names in Planning Center. |
-| "doesn't look like a Planning Center Songs export" | You picked a different file. Export the **Songs** list again (Step 5). |
-| "That's a Numbers file" | In Numbers, use **File > Export To > CSV**, and use that file. |
-| "couldn't reach Planning Center" | Check your internet connection and try again. |
+| Your computer says it can't open the app | See Step 1. You only have to allow it once. |
+| "Planning Center did not accept your key" | Check that you copied the whole Client ID and Secret. If the key was deleted in Planning Center, create a new one and paste it in. |
+| "Your Planning Center login doesn't have permission to do this" | Your login can't edit songs. Ask your Planning Center administrator for access, or have someone with access create the key. |
+| "I couldn't find a tag group named ..." or the setup steps appear | The tags aren't set up yet, or a tag name doesn't start with its number. See Step 3, then click **Check again**. |
+| "I couldn't reach Planning Center" | Check your internet connection and try again. |
+| "Planning Center is busy right now" | Wait a few minutes and try again. |
+| "That file is missing the 'song_id' or 'score' column" | The AI changed the sheet's columns. Ask it to keep every column exactly as it was and try again. |
 | A song says "not found" | The song was deleted or merged in Planning Center. It's safe to ignore. |
-| The window closes right away (Windows) | Python probably wasn't added to PATH. Reinstall Python and check **"Add python.exe to PATH"** (Step 2). |
 
 **Is it safe to run again?** Yes. Running it again never creates duplicate
-tags. Songs that already have the right direction are skipped.
+tags. Songs that already have the right rating are skipped.
 
-**Can I change a direction later?** Yes. Change it in your sheet and send again,
-or change the tag on the song by hand in Planning Center.
+**Can I change a rating later?** Yes. Change the tag on the song in Planning
+Center, or tag the song again in the app and send it.
