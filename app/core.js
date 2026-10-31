@@ -260,7 +260,7 @@
       return { song_id: s.song_id, title: s.title, has_lyrics: !!lyr, lyrics: lyr };
     });
     return JSON.stringify({
-      about: "Lyrics for choosing each song's direction on the Horizontal-Vertical scale. Contains copyrighted " +
+      about: "Lyrics for choosing each song's directional rating on the Horizontal-Vertical scale. Contains copyrighted " +
              "lyrics: keep private, never post or share.",
       count: list.length, songs: list }, null, 2);
   }

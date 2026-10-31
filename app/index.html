@@ -7,7 +7,7 @@
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data:; media-src 'self'; connect-src 'self' https://api.planningcenteronline.com; form-action 'none'; base-uri 'none'">
 <meta name="referrer" content="no-referrer">
 <title>H↔V Song Tagger</title>
-<meta name="description" content="Tag each Planning Center worship song with its direction, from 1 (sung about God) to 5 (sung to God).">
+<meta name="description" content="Tag each Planning Center worship song with its directional rating, from 1 (sung about God) to 5 (sung to God).">
 <link rel="icon" href="../brand/favicon.ico" sizes="any">
 <link rel="icon" href="../brand/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="../brand/apple-touch-icon.png">
@@ -41,7 +41,7 @@
   <section id="step1" class="step">
     <div id="connect-view">
       <h1>Connect to Planning Center</h1>
-      <p class="lead">The tagger needs a <b>Personal Access Token</b> so it can read your songs and update their direction tags. A token is two codes: a Client ID and a Secret.</p>
+      <p class="lead">The tagger needs a <b>Personal Access Token</b> so it can read your songs and update their directional rating tags. A token is two codes: a Client ID and a Secret.</p>
 
       <div class="cols">
         <div class="panel">
@@ -65,7 +65,7 @@
           </form>
           <div id="connect-status" class="status" hidden></div>
           <div id="group-picker" hidden>
-            <h3>Which tag group holds your 1–5 directions?</h3>
+            <h3>Which tag group holds your 1–5 directional ratings?</h3>
             <div id="group-list" class="choice-grid"></div>
             <button class="link" type="button" id="none-of-these">None of these. Show me how to set one up</button>
           </div>
@@ -90,8 +90,8 @@
     </div>
 
     <div id="setup-view" hidden>
-      <h1>Set up your direction tags</h1>
-      <p class="lead">You're connected, but Planning Center doesn't have a 1–5 direction tag group yet. You only do this once, and it takes about two minutes.</p>
+      <h1>Set up your directional rating tags</h1>
+      <p class="lead">You're connected, but Planning Center doesn't have a 1–5 directional rating tag group yet. You only do this once, and it takes about two minutes.</p>
       <div id="setup-incomplete" class="status warn" hidden></div>
 
       <div class="setup-grid">
@@ -107,7 +107,7 @@
           </figure>
         </div>
         <div class="panel">
-          <h3><span class="num">2</span> Add the direction group and its tags</h3>
+          <h3><span class="num">2</span> Add the directional rating group and its tags</h3>
           <ol class="howto">
             <li>Click <b>Add Tag Group</b>.</li>
             <li>Name it <b>Horizontal Vertical Scale</b>. Leave <b>Allow multiple selections</b> off, then click <b>Save</b>.</li>
@@ -148,7 +148,7 @@
       <div class="panel">
         <h3 class="step-q"><span class="num">1</span> Which songs?</h3>
         <div id="tag-options" class="choice-list"></div>
-        <label class="check-line" id="skip-line"><input type="checkbox" id="skip-scored" checked> <span id="skip-label">Leave out songs that already have a direction</span></label>
+        <label class="check-line" id="skip-line"><input type="checkbox" id="skip-scored" checked> <span id="skip-label">Leave out songs that already have a directional rating</span></label>
         <p class="muted" id="scope-count"></p>
       </div>
 
@@ -158,12 +158,12 @@
       <div class="mode-grid">
         <button type="button" class="mode-card" id="mode-self">
           <b>Tag them myself</b>
-          <span>Pick a direction from 1 to 5 for each song, with the rubric beside you. Good for teams who want to talk through every song.</span>
+          <span>Pick a directional rating from 1 to 5 for each song, with the rubric beside you. Good for teams who want to talk through every song.</span>
           <em>Start tagging →</em>
         </button>
         <button type="button" class="mode-card" id="mode-claude">
-          <b>Have AI suggest directions</b>
-          <span>An assistant like Claude, ChatGPT, or Gemini reads the lyrics and suggests a direction for every song, marking the ones it's unsure about. You review them before anything is sent.</span>
+          <b>Have AI suggest directional ratings</b>
+          <span>An assistant like Claude, ChatGPT, or Gemini reads the lyrics and suggests a directional rating for every song, marking the ones it's unsure about. You review them before anything is sent.</span>
           <em>Get AI help →</em>
         </button>
       </div>
@@ -200,7 +200,7 @@
     </div>
 
     <details class="panel claude" id="claude-panel">
-      <summary>Let AI suggest directions</summary>
+      <summary>Let AI suggest directional ratings</summary>
       <ol class="claude-steps">
         <li>
           <b>Save the 2 files.</b> One has the lyrics for the AI to read (keep it private); the other is the sheet it fills in.
@@ -267,8 +267,8 @@
 
   <!-- ============================== Step 4 ============================== -->
   <section id="step4" class="step" hidden>
-    <h1>Send directions to Planning Center</h1>
-    <p class="lead">This changes only the direction tag on each song. Every other tag is kept.</p>
+    <h1>Send directional ratings to Planning Center</h1>
+    <p class="lead">This changes only the directional rating tag on each song. Every other tag is kept.</p>
 
     <div class="cols">
       <div class="panel">
@@ -316,15 +316,15 @@
     </div>
 
     <div id="whats-next" hidden>
-      <h2>What's next: using your directions</h2>
-      <p class="lead">Your directions are ordinary song tags, so they work everywhere Planning Center uses tags.</p>
+      <h2>What's next: using your directional ratings</h2>
+      <p class="lead">Your directional ratings are ordinary song tags, so they work everywhere Planning Center uses tags.</p>
       <div class="next-item panel">
         <div>
           <h3>Plan a service with them</h3>
           <ol class="howto">
             <li>In a plan, add a song. The <b>Select Song</b> panel opens.</li>
             <li>Click <b>Filter</b>, then the <b>Tags</b> tab.</li>
-            <li>Under <b class="group-name">your direction group</b>, tick the directions you want. For an opening of declaration, try <b>1</b> and <b>2</b>; for a time of response, <b>4</b> and <b>5</b>.</li>
+            <li>Under <b class="group-name">your directional rating group</b>, tick the ratings you want. For an opening of declaration, try <b>1</b> and <b>2</b>; for a time of response, <b>4</b> and <b>5</b>.</li>
             <li>The list narrows to matching songs. Pick one.</li>
           </ol>
         </div>
@@ -335,18 +335,18 @@
           <h3>Filter your song library</h3>
           <ol class="howto">
             <li>Open <b>Songs</b> and click <b>Filter</b>.</li>
-            <li>Choose the <b>Tags</b> tab, then pick a direction under <b class="group-name">your direction group</b>.</li>
+            <li>Choose the <b>Tags</b> tab, then pick a rating under <b class="group-name">your directional rating group</b>.</li>
           </ol>
           <p class="muted">Handy for seeing how your most-used songs lean, or finding a vertical song for a season of prayer.</p>
         </div>
-        <figure class="media" hidden><img src="media/filter-songs.webp" alt="The Songs filter in Planning Center, on the Tags tab, with the direction group's menu"></figure>
+        <figure class="media" hidden><img src="media/filter-songs.webp" alt="The Songs filter in Planning Center, on the Tags tab, with the directional rating group's menu"></figure>
       </div>
       <div class="next-item panel">
         <div>
-          <h3>See or change a song's direction</h3>
-          <p>Open any song. Its direction is listed under <b>Tags</b>, in <b class="group-name">your direction group</b>. You can change it right there, and the tagger will see the new direction next time.</p>
+          <h3>See or change a song's directional rating</h3>
+          <p>Open any song. Its directional rating is listed under <b>Tags</b>, in <b class="group-name">your directional rating group</b>. You can change it right there, and the tagger will see the new rating next time.</p>
         </div>
-        <figure class="media" hidden><img src="media/song-tags.webp" alt="A song page in Planning Center showing its direction under Tags"></figure>
+        <figure class="media" hidden><img src="media/song-tags.webp" alt="A song page in Planning Center showing its directional rating under Tags"></figure>
       </div>
     </div>
   </section>

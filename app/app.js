@@ -300,7 +300,7 @@
     $("connect-view").hidden = false;
     $("group-picker").hidden = true;
     status("connect-status", "ok", [el("b", { text: "Connected." }),
-      " Directions go in the '" + group.name + "' tag group."]);
+      " Directional ratings go in the '" + group.name + "' tag group."]);
     setTimeout(loadSongsFromPlanningCenter, 600);
   }
 
@@ -445,7 +445,7 @@
     var scored = inScope.filter(function (s) { return s.current_score; }).length;
     $("skip-line").hidden = !scored;
     $("skip-label").textContent = "Leave out the " + plural(scored, "song") +
-      " that already " + (scored === 1 ? "has" : "have") + " a direction in Planning Center";
+      " that already " + (scored === 1 ? "has" : "have") + " a directional rating in Planning Center";
     var n = HV.selectSongs(state.songs, tags, $("skip-scored").checked).length;
     $("scope-count").textContent = n ? plural(n, "song") + " will be on your list." : "No songs match what you picked.";
     $("how-count").textContent = n ? "For the " + plural(n, "song") + " you picked:" : "Pick at least one song first.";
@@ -471,7 +471,7 @@
     if (!state.practice) state.scores = Object.assign(recall("scores", {}), state.scores);
     $("claude-panel").open = mode === "claude";
     $("claude-panel").querySelector("summary").textContent =
-      mode === "claude" ? "Get AI suggestions" : "Want AI to suggest directions instead?";
+      mode === "claude" ? "Get AI suggestions" : "Want AI to suggest directional ratings instead?";
     renderSongs();
     show(3);
   }
@@ -590,7 +590,7 @@
       var missing = state.selected.length - withLyrics;
       status("claude-files-status", "ok", ["Saved both files. ",
         missing ? plural(missing, "song") + " had no lyrics in Planning Center (often older hymns); " +
-                  "Claude will suggest " + (missing === 1 ? "its direction" : "their directions") + " from what it knows of the song." : ""]);
+                  "Claude will suggest " + (missing === 1 ? "its directional rating" : "their directional ratings") + " from what it knows of the song." : ""]);
     } finally {
       btn.disabled = false;
     }
@@ -616,11 +616,11 @@
       }
     });
     var flagged = result.good.filter(function (g) { return g.flagged; }).length;
-    var parts = [el("b", { text: "Imported " + plural(result.good.length, "direction") + "." })];
+    var parts = [el("b", { text: "Imported " + plural(result.good.length, "directional rating") + "." })];
     if (flagged) parts.push(" " + plural(flagged, "song") + " " + (flagged === 1 ? "is" : "are") +
                             " marked Unsure and shown below; check those before sending.");
     if (added) parts.push(" " + plural(added, "song") + " from the sheet " + (added === 1 ? "was" : "were") + " added to your list.");
-    if (result.blank.length) parts.push(" " + plural(result.blank.length, "row") + " had no direction.");
+    if (result.blank.length) parts.push(" " + plural(result.blank.length, "row") + " had no directional rating.");
     if (result.bad.length) {
       parts.push(" These rows were skipped:");
       parts.push(el("ul", {}, result.bad.slice(0, 10).map(function (b) { return el("li", { text: b }); })));
@@ -636,7 +636,7 @@
   // ==================================================================
 
   var AI_PROMPT = [
-    "You're helping our church choose a \"direction\" for each worship song on a 1-5 Horizontal-Vertical scale. A direction describes which way a song speaks. It is not a rating of quality.",
+    "You're helping our church choose a \"directional rating\" for each worship song on a 1-5 Horizontal-Vertical scale. A directional rating describes which way a song speaks. It is not a rating of quality.",
     "",
     "I've attached two files:",
     "- songs_for_claude.json: each song's lyrics, for you to read only",
@@ -661,14 +661,14 @@
     "Never copy lyrics into your reply, the notes, or the file, not even short phrases. Describe the pattern instead, e.g. \"verses tell about God; chorus speaks to Him\".",
     "",
     "WHAT TO DO",
-    "1. Choose a direction for every song in the sheet. If a song has no lyrics, use what you know of it and say so in its note.",
+    "1. Choose a directional rating for every song in the sheet. If a song has no lyrics, use what you know of it and say so in its note.",
     "2. For every row, fill in:",
-    "   - score: the direction, a number from 1 to 5",
-    "   - confidence: high, or low if there are no lyrics and you don't know the song well, it's a medley, or you could honestly defend the neighboring direction",
+    "   - score: the directional rating, a number from 1 to 5",
+    "   - confidence: high, or low if there are no lyrics and you don't know the song well, it's a medley, or you could honestly defend the neighboring rating",
     "   - notes: one short line describing the pattern, with no lyrics",
     "3. Keep every column and every row in the same order, and never change song_id.",
     "4. Give me the completed sheet as a downloadable scoring_sheet.csv file. If you can't create files, put the whole sheet, header row included, in one CSV code block.",
-    "5. Then tell me in plain language how many songs landed at each direction, and list the low-confidence songs.",
+    "5. Then tell me in plain language how many songs landed at each rating, and list the low-confidence songs.",
     "",
     "Keep your language simple. I'm not technical."
   ].join("\n");
@@ -759,7 +759,7 @@
     warn.textContent = "";
     var unscored = state.selected.length - scored.length;
     if (unscored) warn.appendChild(el("p", { className: "muted",
-      text: plural(unscored, "song") + " without a direction will be left alone." }));
+      text: plural(unscored, "song") + " without a directional rating will be left alone." }));
     var flagged = scored.filter(function (s) { return s.flagged; }).length;
     $("flagged-line").hidden = !flagged;
     $("flagged-label").textContent = "Also send the " + plural(flagged, "song") + " marked Unsure. " +
@@ -856,7 +856,7 @@
     });
     $("check-intro").textContent = state.pc.isPretend
       ? "In real use you'd open each song in Planning Center now. Here's what the pretend Planning Center shows:"
-      : "Open each song in Planning Center. Check that it shows the right direction AND still has its other tags.";
+      : "Open each song in Planning Center. Check that it shows the right directional rating AND still has its other tags.";
     $("send-rest").textContent = "They look right. Send the other " + plural(state.rest.length, "song");
     $("phase-check").hidden = false;
   }
@@ -876,17 +876,17 @@
     showError(e.name === "UserError" ? e.message : "Something went wrong: " + e.message);
     $("done-title").textContent = "Stopped";
     $("done-text").textContent = "Sending stopped because of the problem above. Songs already sent keep their " +
-      "new direction. When it's fixed, send again: songs that are already right are skipped.";
+      "new directional rating. When it's fixed, send again: songs that are already right are skipped.";
     $("phase-done").hidden = false;
   }
 
   function finish(n) {
     $("done-title").textContent = "All done!";
     $("done-text").textContent = state.pc.isPretend
-      ? "That's the whole process. In real use, every tagged song now has its direction tag in Planning Center, " +
+      ? "That's the whole process. In real use, every tagged song now has its directional rating tag in Planning Center, " +
         "and all its other tags are unchanged. When you're ready, " +
         (desktop ? "quit and reopen the app" : "reload this page") + " and connect with your real key."
-      : plural(n, "song") + " checked. Every tagged song now has its direction tag, and all other tags were kept. " +
+      : plural(n, "song") + " checked. Every tagged song now has its directional rating tag, and all other tags were kept. " +
         "If you're finished, delete your key on the Planning Center developer page" +
         (state.savedKey ? " and click “Forget saved key” at the top." : ".");
     $("phase-done").hidden = false;
