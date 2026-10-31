@@ -22,7 +22,7 @@ const BROWSER_HOSTS: &[&str] = &[
     "api.planningcenteronline.com",
     "services.planningcenteronline.com",
     "github.com",
-    "3cordguy.github.io",
+    "equipengine.github.io",
     "claude.ai",
     "chatgpt.com",
     "gemini.google.com",

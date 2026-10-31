@@ -8,8 +8,8 @@
   // Inside the desktop app (desktop/), Planning Center requests, saving files, and
   // opening links go through the app's native side instead of the browser.
   var desktop = window.__TAURI__ && window.__TAURI__.core;
-  var SITE = "https://3cordguy.github.io/planning-center-hv-tagger/";
-  var REPO = "https://github.com/3CordGuy/planning-center-hv-tagger/";
+  var SITE = "https://equipengine.github.io/planning-center-song-tagger/";
+  var REPO = "https://github.com/EquipEngine/planning-center-song-tagger/";
 
   var state = {
     pc: null, practice: false, scale: null, groups: [],

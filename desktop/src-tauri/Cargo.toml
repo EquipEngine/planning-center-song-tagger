@@ -1,6 +1,6 @@
 [package]
 name = "hv-tagger"
-version = "0.1.1"
+version = "0.1.2"
 description = "Horizontal-Vertical Song Tagger for Planning Center"
 license = "MIT"
 edition = "2021"

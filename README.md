@@ -21,11 +21,11 @@ and plan services that mix the two.
 
 | Your computer | Download |
 |---|---|
-| **Mac** (Apple chip or Intel) | [HV-Song-Tagger-Mac.dmg](https://github.com/3CordGuy/planning-center-hv-tagger/releases/latest/download/HV-Song-Tagger-Mac.dmg) |
-| **Windows** 10 or 11 | [HV-Song-Tagger-Windows-Setup.exe](https://github.com/3CordGuy/planning-center-hv-tagger/releases/latest/download/HV-Song-Tagger-Windows-Setup.exe) |
+| **Mac** (Apple chip or Intel) | [HV-Song-Tagger-Mac.dmg](https://github.com/EquipEngine/planning-center-song-tagger/releases/latest/download/HV-Song-Tagger-Mac.dmg) |
+| **Windows** 10 or 11 | [HV-Song-Tagger-Windows-Setup.exe](https://github.com/EquipEngine/planning-center-song-tagger/releases/latest/download/HV-Song-Tagger-Windows-Setup.exe) |
 
 There's nothing else to install. Every version is on the
-[Releases](https://github.com/3CordGuy/planning-center-hv-tagger/releases) page.
+[Releases](https://github.com/EquipEngine/planning-center-song-tagger/releases) page.
 
 ## Opening it the first time
 
@@ -59,7 +59,7 @@ app, choose **Open**, and click **Open**.
 **Is it safe?** The warning means the app isn't registered with Apple or
 Microsoft. It doesn't mean anything was found wrong with it. Every line of the
 code is in this repository for anyone to read. Download it only from this page
-or the [project website](https://3cordguy.github.io/planning-center-hv-tagger/),
+or the [project website](https://equipengine.github.io/planning-center-song-tagger/),
 not from a copy someone sends you.
 
 ## How it works

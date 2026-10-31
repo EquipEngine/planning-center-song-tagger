@@ -25,8 +25,8 @@ paste, you can do this.
 ### Step 1: Download and open the app
 
 1. Download the file for your computer:
-   - **Mac:** [HV-Song-Tagger-Mac.dmg](https://github.com/3CordGuy/planning-center-hv-tagger/releases/latest/download/HV-Song-Tagger-Mac.dmg)
-   - **Windows:** [HV-Song-Tagger-Windows-Setup.exe](https://github.com/3CordGuy/planning-center-hv-tagger/releases/latest/download/HV-Song-Tagger-Windows-Setup.exe)
+   - **Mac:** [HV-Song-Tagger-Mac.dmg](https://github.com/EquipEngine/planning-center-song-tagger/releases/latest/download/HV-Song-Tagger-Mac.dmg)
+   - **Windows:** [HV-Song-Tagger-Windows-Setup.exe](https://github.com/EquipEngine/planning-center-song-tagger/releases/latest/download/HV-Song-Tagger-Windows-Setup.exe)
 2. Open it. The first time, your computer warns you, because the app isn't
    registered with Apple or Microsoft (that costs a yearly fee). You only have
    to do this once.

@@ -48,5 +48,5 @@ jobs:
           cp ${{ matrix.built }} "${{ matrix.asset }}"
           gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1 ||
             gh release create "$GITHUB_REF_NAME" --title "HV Song Tagger $GITHUB_REF_NAME" \
-              --notes "Download the file for your computer. The first time you open it, your computer will warn you because the app isn't registered with Apple or Microsoft. See https://3cordguy.github.io/planning-center-hv-tagger/#first-open for what to click." || true
+              --notes "Download the file for your computer. The first time you open it, your computer will warn you because the app isn't registered with Apple or Microsoft. See https://equipengine.github.io/planning-center-song-tagger/#first-open for what to click." || true
           gh release upload "$GITHUB_REF_NAME" "${{ matrix.asset }}" --clobber
